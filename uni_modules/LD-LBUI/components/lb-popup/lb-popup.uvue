@@ -1,0 +1,388 @@
+<template>
+	<view v-if="mounted" class="lb-popup" :class="[`placement--${placement}`]" :style="{zIndex:zIndex}"
+		@touchmove.stop.prevent="moveHandle">
+
+		<!-- 遮罩层 -->
+		<view @tap="onMaskTap" v-if="mask" class="lb-popup__mask"
+			:style="{ '--mask-opacity': String(maskOpacity),'--dur':String(duration) }"
+			@touchmove.stop.prevent="moveHandle"></view>
+
+		<view class="lb-popup__panel" :class="[`is-${phase}`,`shape--${shape}`,`varint--${variant}`]"
+			:style="panelStyle">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const visible = defineModel('visible');
+	const mounted = ref(false);
+
+	const props = defineProps({
+		placement: { type: String, default: 'center' },
+		shape: { type: String, default: 'none' },
+		variant: { type: String, default: 'card' },
+		mask: { type: Boolean, default: true },
+		maskClosable: { type: Boolean, default: true },
+		maskOpacity: { type: [String, Number], default: 0.5 },
+		lockScroll: { type: Boolean, default: true },
+		/** 尺寸控制（字符串：rpx/px/%/vh/vw） */
+		width: { type: String, default: '300px' },
+		height: { type: String, default: '300px' },
+		maxHeight: { type: String, default: '100vh' },
+		zIndex: { type: [Number, String], default: 1050 },
+		/** 动画时长（ms） */
+		duration: { type: Number, default: 200 }
+	})
+
+	const emit = defineEmits(['open', 'close']);
+
+	const phase = ref('idle') // idle | enter | leave
+
+	const panelStyle = computed(() => {
+		const style = {}
+		if (props.width) style.width = props.width
+		if (props.height) style.height = props.height
+		if (props.maxHeight) style.maxHeight = props.maxHeight
+		return style
+	})
+
+	watch(visible, (val : boolean) => {
+		if (val) {
+			open()
+		} else {
+			startClose()
+		}
+	})
+
+	function open() {
+		mounted.value = true
+		nextTick(() => {
+			phase.value = 'enter'
+			emit('open')
+		})
+	}
+
+	function startClose() {
+		phase.value = 'leave'
+		setTimeout(() => {
+			mounted.value = false
+			emit('close')
+		}, props.duration)
+	}
+
+	function close() {
+		visible.value = false
+		startClose()
+	}
+
+	function onMaskTap() {
+		if (!visible.value || !props.maskClosable) return
+		close()
+	}
+
+	function moveHandle() {
+		return
+	}
+</script>
+
+<style lang="scss" scoped>
+	@use "~@/uni_modules/LD-LBUI/styles/_tokens.scss" as tokens;
+	@use "~@/uni_modules/LD-LBUI/styles/_mixins.scss" as mx;
+
+	.lb-popup {
+		position: fixed;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		width: 100vw;
+		flex-direction: row;
+	}
+
+	// 遮罩层
+	.lb-popup__mask {
+		position: absolute;
+		inset: 0;
+		background-color: rgba(0, 0, 0, var(--mask-opacity, .5));
+
+		&.is-enter {
+			animation: fade-in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: fade-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+	.lb-popup__panel {
+		position: relative;
+		background-color: var(--bg);
+		color: var(--text);
+		overflow: hidden;
+		@include mx.shadow(md);
+
+		&.variant--plain {
+			border-width: 0;
+			box-shadow: none;
+		}
+
+		&.is-enter {
+			animation: scale-in var(--dur, 200ms) var(--ease, ease) forwards;
+		}
+
+		&.is-leave {
+			animation: scale-out var(--dur, 200ms) var(--ease, ease) forwards;
+		}
+
+		display: flex;
+		flex-direction: column;
+	}
+
+	// 形状
+	.shape--none {
+		border-radius: 0;
+	}
+
+	.shape--md {
+		@include mx.rounded(md)
+	}
+
+	.shape--lg {
+		@include mx.rounded(lg)
+	}
+
+	.shape--xl {
+		@include mx.rounded(xl)
+	}
+
+	// 位置
+	.placement--center {
+		align-items: center;
+		justify-content: center;
+	}
+
+	.placement--center .lb-popup__panel {
+		@include mx.rounded(lg);
+	}
+
+	/* 下抽屉 */
+	.placement--bottom {
+		align-items: flex-end;
+		justify-content: stretch;
+	}
+
+	.placement--bottom .lb-popup__panel {
+		width: 100vw;
+		max-width: 100vw;
+		border-top-left-radius: map-get($map: tokens.$border-radius, $key: md);
+		border-top-right-radius: map-get($map: tokens.$border-radius, $key: md);
+		max-height: 80vh;
+
+		&.is-enter {
+			animation: slide-up-in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: slide-up-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+	/* 上抽屉 */
+	.placement--top {
+		align-items: flex-start;
+		justify-content: stretch;
+	}
+
+	.placement--top .lb-popup__panel {
+		width: 100vw;
+		max-width: 100vw;
+		border-bottom-left-radius: map-get($map: tokens.$border-radius, $key: md);
+		border-bottom-right-radius: map-get($map: tokens.$border-radius, $key: md);
+		max-height: 80vh;
+
+		&.is-enter {
+			animation: slide-down-in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: slide-down-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+	/* 左抽屉 */
+	.placement--left {
+		align-items: stretch;
+		justify-content: flex-start;
+	}
+
+	.placement--left .lb-popup__panel {
+		height: 100vh;
+		width: 80vw;
+		max-width: 80vw;
+		border-top-right-radius: map-get(tokens.$border-radius, md);
+		border-bottom-right-radius: map-get(tokens.$border-radius, md);
+
+		&.is-enter {
+			animation: slide-right-in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: slide-right-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+
+	/* 右抽屉 */
+	.placement--right {
+		align-items: stretch;
+		justify-content: flex-end;
+	}
+
+	.placement--right .lb-popup__panel {
+		height: 100vh;
+		width: 80vw;
+		max-width: 80vw;
+		border-top-left-radius: map-get(tokens.$border-radius, md);
+		border-bottom-left-radius: map-get(tokens.$border-radius, md);
+
+		&.is-enter {
+			animation: slide-left-in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: slide-left-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+	/* —— 动画 —— */
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+
+		to {
+			opacity: 1;
+		}
+	}
+
+	@keyframes fade-out {
+		from {
+			opacity: 1;
+		}
+
+		to {
+			opacity: 0;
+		}
+	}
+
+
+	@keyframes scale-in {
+		from {
+			opacity: 0;
+			transform: translate3d(0, 0, 0) scale(.96);
+		}
+
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes scale-out {
+		from {
+			opacity: 1;
+			transform: scale(1);
+		}
+
+		to {
+			opacity: 0;
+			transform: scale(.96);
+		}
+	}
+
+
+	@keyframes slide-up-in {
+		from {
+			transform: translateY(100%);
+		}
+
+		to {
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes slide-up-out {
+		from {
+			transform: translateY(0);
+		}
+
+		to {
+			transform: translateY(100%);
+		}
+	}
+
+
+	@keyframes slide-down-in {
+		from {
+			transform: translateY(-100%);
+		}
+
+		to {
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes slide-down-out {
+		from {
+			transform: translateY(0);
+		}
+
+		to {
+			transform: translateY(-100%);
+		}
+	}
+
+
+	@keyframes slide-left-in {
+		from {
+			transform: translateX(100%);
+		}
+
+		to {
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes slide-left-out {
+		from {
+			transform: translateX(0);
+		}
+
+		to {
+			transform: translateX(100%);
+		}
+	}
+
+
+	@keyframes slide-right-in {
+		from {
+			transform: translateX(-100%);
+		}
+
+		to {
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes slide-right-out {
+		from {
+			transform: translateX(0);
+		}
+
+		to {
+			transform: translateX(-100%);
+		}
+	}
+</style>

@@ -1,0 +1,18 @@
+@use "./_tokens.scss" as tokens;
+@use "./_mixins.scss" as mx;
+@use "./_palette.scss" as *;
+
+@include mx.export-css-vars($theme-light, ":root");
+@include mx.export-css-vars($theme-light, "page"); // 小程序等
+@include mx.export-css-vars($theme-dark, '[data-theme="dark"]');
+@include mx.export-css-vars($theme-dark, ".theme-dark");
+
+:root,page{
+	--font-sans:#{tokens.$font-sans};
+	--font-mono:#{tokens.$font-mono};
+}
+
+@include mx.export-css-vars(tokens.$line-heights, ":root", "lh-");
+@include mx.export-css-vars(tokens.$font-weights, ":root", "fw-");
+@include mx.export-css-vars(tokens.$font-sizes, ":root", "font-size-");
+@include mx.export-css-vars(tokens.$spacing,":root","spacing-");

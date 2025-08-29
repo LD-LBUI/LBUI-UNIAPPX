@@ -1,0 +1,63 @@
+<template>
+	<view class="lb-navbar" :style="{'background-color':bgColor,'color':color}">
+		<view @tap="handelTap" class="lb-navbar--left-arrow">
+			<lb-icon v-if="leftArrow" type="icon-arrow-left-bold" size="42rpx" />
+		</view>
+		<slot>
+			<text :style="{'text-align':align}" style="width: 100%;box-sizing: border-box;">{{title}}</text>
+		</slot>
+	</view>
+</template>
+
+<script setup>
+	const props = defineProps({
+		title: {
+			type: String,
+			default: ''
+		},
+		leftArrow: {
+			type: Boolean,
+			default: true
+		},
+		align: {
+			type: String,
+			default: 'center'
+		},
+		color: {
+			type: String,
+			default: '#111'
+		},
+		bgColor: {
+			type: String,
+			default: ''
+		}
+	})
+
+	const emit = defineEmits(['goBack'])
+
+	function handelTap() {
+		emit('goBack')
+	}
+</script>
+
+<style lang="scss" scoped>
+	.lb-navbar {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		padding: var(--spacing-md);
+		background: var(--bg);
+		font-size: var(--font-size-lg);
+		font-weight: 600;
+		width: 100%;
+		gap: 12rpx;
+		position: relative;
+
+		.lb-navbar--left-arrow {
+			position: absolute;
+			left: 12rpx;
+			z-index: 200508;
+		}
+	}
+</style>

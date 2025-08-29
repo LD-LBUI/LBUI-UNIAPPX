@@ -1,0 +1,101 @@
+<template>
+	<view class="lb-input-cell" :style="{'align-items':helpMessage?'start':'center'}">
+		<view class="label">
+			<slot name="prefix">
+				<lb-icon v-if="icon" :type="icon" :size="48" />
+			</slot>
+			<text v-if="required" class="mark">*</text>
+			{{label}}
+		</view>
+		<view class="input-item">
+			<input v-model="model" :password="password" :disabled="disabled" :style="{'text-align':align}" style="width: 100%;"
+				:type="type" :placeholder="placeholder" />
+			<slot>
+				<text class="help-message">{{helpMessage}}</text>
+			</slot>
+		</view>
+		<view>
+			<slot name="suffix"></slot>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		label: {
+			type: String,
+			default: ''
+		},
+		required: {
+			type: Boolean,
+			default: false
+		},
+		disabled: {
+			type: Boolean,
+			default: false
+		},
+		password: {
+			type: Boolean,
+			default: false
+		},
+		type: {
+			type: String,
+			default: 'text'
+		},
+		placeholder: {
+			type: String,
+			default: ''
+		},
+		align: {
+			type: String,
+			default: 'left'
+		},
+		helpMessage: {
+			type: String,
+			default: ''
+		},
+		icon: {
+			type: String,
+			default: ''
+		}
+	})
+	
+	const model = defineModel()
+</script>
+
+<style lang="scss" scoped>
+	.lb-input-cell {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		gap: var(--spacing-md);
+		background-color: var(--bg);
+		font-size: var(--font-size-md);
+		min-height: 48px;
+		width: 100%;
+		padding: var(--spacing-lg) var(--spacing-sm);
+		box-sizing: border-box;
+
+
+		.label {
+			.mark {
+				color: var(--danger-base);
+			}
+		}
+
+		.input-item {
+			flex: 1;
+
+			.help-message {
+				font-size: var(--font-size-sm);
+				color: var(--gray-400);
+				font-weight: 400;
+				margin-top: var(--spacing-xs);
+			}
+		}
+	}
+
+	.lb-input-cell+.lb-input-cell {
+		border-top: 1px solid var(--border);
+	}
+</style>

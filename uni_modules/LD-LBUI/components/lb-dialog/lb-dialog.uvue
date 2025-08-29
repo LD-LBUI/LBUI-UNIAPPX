@@ -1,0 +1,159 @@
+<template>
+	<lb-popup v-model:visible="visible" placement="center" variant="card" :mask-closable="maskClosable" :width="width"
+		:max-height="maxHeight" height="auto" :z-index="zIndex">
+		<view class="dialog__header">
+			<view class="dialog__header_icon" v-if="showIcon" :class="[`is-${type}`]">
+				<lb-icon :type="iconMap[type]" size="42rpx" />
+			</view>
+
+			<view class="dialog__header_title">
+				{{title}}
+			</view>
+		</view>
+
+		<view class="dialog__panel">
+			<slot>
+				<text class="dialog__content">{{content}}</text>
+			</slot>
+		</view>
+
+		<view class="dialog__footer">
+			<slot name="footer">
+				<view class="dialog__footer_acitons">
+					<lb-button @tap="onCancel" style="padding: 18rpx 0;font-weight: var(--fw-semibold);flex: 1;" variant="ghost"
+						type="info" shape="none" block>{{cancelText}}</lb-button>
+					<lb-button @tap="onConfirm" style="padding: 18rpx 0;font-weight: var(--fw-semibold);flex: 1;"
+						variant="ghost" shape="none" block>{{confirmText}}</lb-button>
+				</view>
+			</slot>
+		</view>
+	</lb-popup>
+</template>
+
+<script setup>
+	const visible = defineModel()
+	const props = defineProps({
+		title: { type: String, default: '提示' },
+		content: { type: String, default: '' },
+		type: { type: String, default: 'info' }, // info|success|warning|danger|primary
+		showIcon: { type: Boolean, default: true },
+
+		// 操作按钮
+		showAction: { type: Boolean, default: true },
+		confirmText: { type: String, default: '确定' },
+		cancelText: { type: String, default: '取消' },
+
+		async: { type: Boolean, default: false },
+		closeOnConfirm: { type: Boolean, default: true },
+		closeOnCancel: { type: Boolean, default: true },
+
+		maskClosable: { type: Boolean, default: false },
+		width: { type: String, default: '640rpx' },
+		maxHeight: { type: String, default: '70vh' },
+		zIndex: { type: [Number, String], default: 1050 }
+	})
+	const emit = defineEmits(['confirm', 'cancel'])
+	const confirmLoading = ref(false)
+	const iconMap = {
+		'success': 'icon-success',
+		'danger': 'icon-error',
+		'warning': 'icon-warning',
+		'info': 'icon-prompt'
+	}
+
+	function close() {
+		visible.value = false
+	}
+	function stopLoading() {
+		confirmLoading.value = false
+	}
+	async function onConfirm() {
+		if (confirmLoading.value) return
+		if (!props.async) {
+			emit('confirm')
+			if (props.closeOnConfirm) close();
+			return
+		}
+		// 异步
+		confirmLoading.value = true
+		emit('confirm', {
+			close,
+			stop: stopLoading,
+			done: () => { stopLoading(); close() }
+		})
+	}
+
+	function onCancel() {
+		if (confirmLoading.value) return
+		emit('cancel')
+		if (props.closeOnCancel) close();
+	}
+</script>
+
+<style lang="scss">
+	.dialog__header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12rpx;
+		padding: var(--spacing-lg) 0;
+		box-sizing: border-box;
+		flex-direction: row;
+
+		.dialog__header_title {
+			font-family: var(--font-mono);
+			font-size: var(--font-size-lg);
+			font-weight: var(--fw-semibold);
+		}
+
+		.dialog__header_icon {
+			border-radius: 9999rpx;
+			color: var(--info-base);
+			width: 45rpx;
+			height: 45rpx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			&.is-success {
+				color: var(--success-base);
+			}
+
+			&.is-warning {
+				color: var(--warning-base);
+			}
+
+			&.is-danger {
+				color: var(--danger-base);
+			}
+
+			&.is-primary {
+				color: var(--primary-base);
+			}
+		}
+	}
+
+	.dialog__panel {
+		padding: var(--spacing-lg) var(--spacing-xl);
+		max-height: inherit;
+		overflow: auto;
+		box-sizing: border-box;
+	}
+
+	.dialog__content {
+		color: var(--text-sub);
+		line-height: var(--lh-relaxed);
+	}
+
+	.dialog__footer {
+		width: 100%;
+		margin-top: var(--spacing-xl);
+		border-top: 1px solid var(--border);
+
+		.dialog__footer_acitons {
+			display: flex;
+			width: 100%;
+			flex-direction: row;
+		}
+	}
+</style>

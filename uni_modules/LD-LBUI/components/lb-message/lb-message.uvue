@@ -1,0 +1,131 @@
+<template>
+	<view class="lb-message" :class="[`pos--${placement}`]" :style="{zIndex:zIndex,padding:offset+'px'}">
+		<view v-if="msg" class="lb-message__item" :style="styleByType(msg.type)" :class="[`is--${msg.type}`]">
+			<lb-icon :style="{color:`var(--${msg.type}-base)`}" size="42rpx" type="icon-prompt-filling" />
+			<text>{{msg.content}}</text>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	import { MESSAGE_KEY, type MessageType } from '.'
+	const mounted = ref(false)
+	const props = defineProps({
+		placement: { type: String, default: 'top' },
+		offset: { type: Number, default: 16 },
+		zIndex: {
+			type: Number,
+			default: 1050
+		},
+		width: { type: String, default: '92vw' }
+	})
+
+	const msg = ref(null)
+	const phase = ref('idle') // idle | enter | leave
+	let uid = 0
+	let timer
+
+	function push(options = {}) {
+		const {
+			content = '',
+			type = 'info',
+			duration = 2000,
+			closable = false
+		} = options
+
+		if (!content) return { id: -1, close: clear }
+
+		// 覆盖前一条
+		if (timer) { clearTimeout(timer); timer = null }
+		const id = ++uid
+		phase.value = 'enter'
+		msg.value = { id, content, type, duration, closable }
+
+		if (duration > 0) {
+			timer = setTimeout(() => {
+				clear()
+			}, duration)
+		}
+
+		return { id, close: clear }
+	}
+
+	function clear() {
+		phase.value = 'leave'
+		if (timer) { clearTimeout(timer); timer = null }
+		msg.value = null
+	}
+
+	onMounted(() => {
+		uni.$on(MESSAGE_KEY + ':open', push)
+		uni.$on(MESSAGE_KEY + ':close', clear)
+	})
+
+	onUnmounted(() => clear())
+
+	function styleByType(t) {
+		return {
+			background: `var(--bg)`,
+			color: `var(--${t}-text)`,
+			maxWidth: '92vw',
+			width: props.width,
+			boxSizing: 'border-box',
+			padding: `var(--spacing-lg)`,
+			pointerEvents: 'auto'
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@use "~@/uni_modules/LD-LBUI/styles/_tokens.scss" as tokens;
+
+	.lb-message {
+		position: fixed;
+		pointer-events: none;
+		left: 0;
+		right: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.lb-message__item {
+		pointer-events: auto;
+		line-height: var(--lh-normal);
+		flex-direction: row;
+		display: flex;
+		gap: var(--spacing-md);
+		border-radius: map-get($map: tokens.$border-radius, $key: md);
+		align-items: center;
+		box-shadow: map-get($map: tokens.$shadow, $key: lg);
+
+
+		&.is-enter {
+			animation: slide-down--in var(--dur, 200ms) ease forwards;
+		}
+
+		&.is-leave {
+			animation: slide-down-out var(--dur, 200ms) ease forwards;
+		}
+	}
+
+	@keyframes slide-down-in {
+		from {
+			transform: translateY(-100%);
+		}
+
+		to {
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes slide-down-out {
+		from {
+			transform: translateY(0);
+		}
+
+		to {
+			transform: translateY(-100%);
+		}
+	}
+</style>

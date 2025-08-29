@@ -1,0 +1,105 @@
+<template>
+	<lb-popup v-model:visible="visible" @close="emit('close')" @open="emit('open')" width="100vw" placement="bottom"
+		height="auto" shape="none">
+		<view class="area-bottom">
+			<view class="action-sheet__tips">
+				{{tips}}
+			</view>
+			<slot>
+				<template v-if="items">
+					<view v-for="item in items" :key="item.key" class="action-sheet__item" @tap="handleSelect(item)">
+						{{ item.title }}
+					</view>
+				</template>
+			</slot>
+		</view>
+		<view v-if="cancelAction" class="action-sheet__cancel" @tap="handleCancel(item)">
+			取消
+		</view>
+	</lb-popup>
+</template>
+
+<script setup>
+	interface ActionItem {
+		title : string,
+		key : string | number,
+		icon ?: string,
+		url ?: string,
+		style ?: string,
+	}
+
+	const visible = defineModel()
+	const props = defineProps({
+		tips: {
+			type: String,
+			default: ''
+		},
+		items: {
+			type: Array<ActionItem>,
+			default: []
+		},
+		theme: {
+			type: String,
+			default: 'list'
+		},
+		cancelAction: {
+			type: Boolean,
+			default: true
+		}
+	})
+
+	const emit = defineEmits(['selected', 'open', 'close'])
+
+	const handleSelect = (item : ActionItem) => {
+		if (item?.url) {
+			uni.navigateTo({
+				url: item.url
+			})
+		}
+		emit('selected', item)
+	}
+
+	const handleCancel = () => {
+		visible.value = false
+		emit('close')
+	}
+</script>
+
+<style lang="scss" scoped>
+	.area-bottom {
+		margin-bottom: var(--window-bottom);
+	}
+
+	.action-sheet__tips {
+		font-size: var(--font-size-xs);
+		color: var(--text-sub);
+		text-align: center;
+		padding: var(--spacing-lg) 0;
+		border-bottom: 1px solid var(--gray-300);
+	}
+
+	.action-sheet__item {
+		width: 100%;
+		text-align: center;
+		font-size: var(--font-size-md);
+		color: var(--text-sub);
+		padding: var(--spacing-lg) 0;
+	}
+
+	.action-sheet__item:active {
+		background: var(--gray-100);
+	}
+
+	.action-sheet__cancel {
+		width: 100%;
+		text-align: center;
+		font-size: var(--font-size-md);
+		color: var(--text-sub);
+		padding: var(--spacing-lg) 0;
+		border-top: 4px solid var(--border);
+	}
+
+	.action-sheet__item+.action-sheet__item {
+		border-top: 1px solid var(--border);
+	}
+</style>

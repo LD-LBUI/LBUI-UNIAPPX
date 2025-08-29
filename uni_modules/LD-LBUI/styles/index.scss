@@ -1,0 +1,34 @@
+@forward "./_themes.scss";
+@forward './_utilities.scss';
+
+:root,
+page {
+  color: var(--text);
+  box-sizing: border-box;
+  font-size: var(--font-size-md);
+  background: #f3f3f3;
+}
+
+.iconfont{
+	font-family: 'iconfont';
+	font-style: normal;
+}
+
+/* #ifdef APP || H5 */
+@font-face{
+	font-family: 'iconfont';
+	src: url('../assets/iconfont.woff') format('truetype');
+}
+/* #endif */
+
+/* #ifdef MP */
+@font-face {
+	font-family: 'iconfont';
+	src: url('../assets/iconfont.woff') format('truetype');
+}
+/* #endif */
+
+button::after {
+  border: none;
+  content: none;
+}

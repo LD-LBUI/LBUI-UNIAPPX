@@ -1,0 +1,8 @@
+@use "sass:map";
+@use "./_tokens.scss" as tokens;
+
+@each $k, $v in tokens.$font-sizes {
+  .text-#{$k} {
+    font-size: $v;
+  }
+}

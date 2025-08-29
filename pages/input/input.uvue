@@ -1,0 +1,31 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-title title="输入框示例"></lb-title>
+		<lb-input label="标签文字" placeholder="请输入内容"></lb-input>
+		<lb-input required label="标签文字" align="center" placeholder="请输入内容"></lb-input>
+		<lb-input help-message="这个带有辅助信息" label="标签文字" placeholder="请输入内容"></lb-input>
+
+		<lb-title title="带图标的输入框"></lb-title>
+		<lb-input icon="icon-mobile-phone" placeholder="请输入手机号"></lb-input>
+		<lb-input label="验证码" placeholder="请输入验证码">
+			<template #suffix>
+				<lb-button size="xs">发送验证码</lb-button>
+			</template>
+		</lb-input>
+
+		<lb-title title="特定类的输入框"></lb-title>
+		<lb-input label="输入密码" v-model="password" password placeholder="请输入密码"></lb-input>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup>
+	const password = ref('thispassword');
+</script>
+
+<style>
+
+</style>

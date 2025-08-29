@@ -1,0 +1,35 @@
+<template>
+	<view class="lb-tabs">
+		<scroll-view :scroll-into-view="scrollIntoViewId" scroll-with-animation :show-scrollbar="false"
+			direction="horizontal">
+			<view class="lb-tabs__nav-inner" ref="navRef">
+				<view v-for="(pane,idx) in panes" :key="pane.id" :id="`lb-tab-${uid}-${idx}`" class="lb-tabs__tab">
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const modelValue = defineModel()
+	const props = defineProps<{
+		type ?: 'line' | 'card' | 'segment'
+		size ?: 'sm' | 'md' | 'lg'
+		theme ?: string
+		swipeable ?: boolean
+		lazy ?: boolean
+	}>({
+		type: 'line',
+		size: 'md',
+		theme: 'primary',
+		swipeable: true,
+		lazy: true
+	})
+	
+	const emit = defineEmits(['change'])
+	
+</script>
+
+<style>
+
+</style>

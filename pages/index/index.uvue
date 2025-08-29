@@ -1,0 +1,51 @@
+<template>
+	<lb-navbar @go-back="goBack" bg-color="#007aff" title="标题"></lb-navbar>
+	<view style="display: flex; width: 100%; padding: 12px; gap: 6rpx;">
+
+		<lb-button>这是一个按钮</lb-button>
+		<lb-button icon="icon-check-item-filling" variant="outline">这是一个幽灵按钮</lb-button>
+
+		<lb-button type="success">这是一个按钮</lb-button>
+		<lb-button type="success" variant="outline">这是一个幽灵按钮</lb-button>
+
+		<lb-button type="warning">这是一个按钮</lb-button>
+		<lb-button type="warning" variant="outline">这是一个幽灵按钮</lb-button>
+
+		<lb-button type="danger" @tap="goToPopup">PopUp</lb-button>
+		<lb-button type="danger" variant="outline">这是一个幽灵按钮</lb-button>
+
+		<lb-button type="info" @tap="goToIcon">LB-ICON</lb-button>
+		<lb-button type="info" @tap="goToInput">LB-INPUT</lb-button>
+
+	</view>
+
+	<lb-popup v-model:visiable="showPopup">
+		这里是内容内容内容
+	</lb-popup>
+</template>
+<script setup lang="uts">
+	const showPopup = ref(false)
+	function goToIcon() {
+		uni.navigateTo({
+			url: "/pages/icon/icon"
+		})
+	}
+
+	function goBack() {
+		uni.showToast({
+			title: "Go Back Arrow"
+		})
+	}
+
+	function goToInput() {
+		uni.navigateTo({
+			url: "/pages/input/input"
+		})
+	}
+
+	function goToPopup() {
+		uni.navigateTo({
+			url: "/pages/popup/popup"
+		})
+	}
+</script>

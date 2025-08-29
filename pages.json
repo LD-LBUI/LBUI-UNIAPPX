@@ -1,0 +1,37 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://doc.dcloud.net.cn/uni-app-x/collocation/pagesjson.html
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "LBUI"
+			}
+		},
+		{
+			"path": "pages/icon/icon",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path" : "pages/input/input",
+			"style" : 
+			{
+				"navigationBarTitleText" : "LB-INPUT"
+			}
+		},
+		{
+			"path" : "pages/popup/popup",
+			"style" : 
+			{
+				"navigationBarTitleText" : "Popup"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "LBUI",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}

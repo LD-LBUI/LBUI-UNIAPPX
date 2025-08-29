@@ -1,0 +1,84 @@
+@use "sass:map";
+@use "./_tokens.scss" as *;
+@use "./_mixins.scss" as mx;
+
+$semantic-colors: (
+  primary: $color-primary,
+  success: $color-success,
+  warning: $color-warning,
+  danger: $color-danger,
+  info: $color-info,
+);
+
+$semantic-derived: ();
+
+@each $name, $base in $semantic-colors {
+  $entry: (
+    #{$name}-base: $base,
+    #{$name}-text: mx.text-on($base),
+    #{$name}-hover: mx.hover($base),
+    #{$name}-active: mx.active($base),
+    #{$name}-subtle: mx.subtle($base),
+    #{$name}-border: mx.border($base)
+  );
+
+  $semantic-derived: map.merge($semantic-derived, $entry);
+}
+
+// 中性色集合
+$neutrals: (
+  gray-0: $gray-0,
+  gray-50: $gray-50,
+  gray-100: $gray-100,
+  gray-200: $gray-200,
+  gray-300: $gray-300,
+  gray-400: $gray-400,
+  gray-500: $gray-500,
+  gray-600: $gray-600,
+  gray-700: $gray-700,
+  gray-800: $gray-800,
+  gray-900: $gray-900,
+  gray-1000: $gray-1000,
+);
+
+// 背景/文本/边框的默认语义
+$surfaces: (
+  bg: $gray-0,
+  bg-muted: $gray-50,
+  text: $gray-800,
+  text-sub: $gray-600,
+  border: $gray-200,
+);
+
+// 汇总为“浅色主题变量”
+$theme-light: map.merge($semantic-derived, map.merge($neutrals, $surfaces));
+
+// 深色主题变量
+$theme-dark-overrides: (
+  bg: $gray-900,
+  bg-muted: $gray-800,
+  text: $gray-100,
+  text-sub: $gray-400,
+  border: $gray-700,
+);
+
+$theme-dark-semantic: ();
+@each $name, $base in $semantic-colors {
+  $deep: mx.tone($base, -10%);
+  $theme-dark-semantic: map.merge(
+    $theme-dark-semantic,
+    (
+      #{$name}-base: $deep,
+      #{$name}-text: mx.text-on($deep),
+      #{$name}-hover: mx.hover($deep),
+      #{$name}-active: mx.active($deep),
+      #{$name}-subtle: mx.subtle($deep),
+      #{$name}-border: mx.border($deep)
+    )
+  );
+}
+
+$theme-dark: map.merge(
+  $theme-light,
+  map.merge($theme-dark-overrides, $theme-dark-semantic)
+);

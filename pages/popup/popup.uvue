@@ -1,0 +1,69 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-title>基础示例</lb-title>
+		<lb-button block @tap="showPopup('center')">居中弹窗</lb-button>
+		<lb-button block @tap="showPopup('bottom')">底部弹窗</lb-button>
+		<lb-button block @tap="showPopup('top')">顶部弹窗</lb-button>
+		<lb-button block @tap="showPopup('left')">左部弹窗</lb-button>
+		<lb-button block @tap="showPopup('right')">右部弹窗</lb-button>
+
+		<lb-title>高级示例</lb-title>
+		<lb-button block @tap="showActionSheetFunc">上拉操作菜单</lb-button>
+		<lb-button block @tap="showDialogFunc">对话框Dialog</lb-button>
+		<lb-button block @tap="showMessageFunc">Message</lb-button>
+
+		<lb-message placement="top"></lb-message>
+		<lb-dialog v-model="showDialog" content="这里是提示内容"></lb-dialog>
+		<lb-action-sheet v-model="showActionSheet" :items="actionList" tips="退出后将删除所有数据"></lb-action-sheet>
+		<lb-popup v-model:visible="popup.visible" :placement="popup.placement">这是一个小小的弹窗</lb-popup>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup>
+	import { useMessage } from '../../uni_modules/LD-LBUI/components/lb-message'
+	const popup = ref({
+		placement: 'center',
+		visible: false
+	})
+
+	const { message, success } = useMessage()
+
+	const showActionSheet = ref(false)
+	const showDialog = ref(false)
+	const showMessage = ref(false)
+	const actionList = [
+		{
+			title: '点赞',
+			key: 'like',
+		},
+		{
+			title: '分享',
+			key: 'share',
+		},
+		{
+			title: '收藏',
+			key: 'save',
+		}
+	]
+
+	function showPopup(placement : string) {
+		popup.value.placement = placement
+		popup.value.visible = true;
+	}
+
+	function showActionSheetFunc() {
+		showActionSheet.value = true
+	}
+
+	function showDialogFunc() {
+		showDialog.value = true
+	}
+
+	function showMessageFunc() {
+		success('你好')
+	}
+</script>

@@ -1,0 +1,54 @@
+@use "sass:color";
+@use "sass:map";
+@use "./_tokens.scss" as tokens;
+
+// 计算文本颜色
+@function text-on($bg, $light: #ffffff, $dark: #111111) {
+  @if (color.lightness($bg) > 50) {
+    @return $dark;
+  } @else {
+    @return $light;
+  }
+}
+
+// 生成颜色阶梯
+@function tone($base, $ratio) {
+  @if ($ratio > 0) {
+    @return mix(#fff, $base, $ratio);
+  }
+  @return mix(#000, $base, -$ratio);
+}
+
+// 快速出 hover/active
+@function hover($base) {
+  @return tone($base, -10%);
+}
+@function active($base) {
+  @return tone($base, -18%);
+}
+@function subtle($base) {
+  @return tone($base, 50%);
+} // 浅背景块/Tag 背景
+@function border($base) {
+  @return tone($base, 60%);
+}
+
+// 将 Map 导出为 :root 变量
+@mixin export-css-vars($map, $selector: ":root", $prefix: "") {
+  #{$selector} {
+    @each $key, $value in $map {
+      @if type-of($value) == "map" {
+        @include export-css-vars($value, "--#{$key}");
+      } @else {
+        --#{$prefix}#{$key}: #{$value};
+      }
+    }
+  }
+}
+
+// —— 新增：边框/圆角/阴影/Ring ——
+@mixin rounded($key: md) { border-radius: map.get(tokens.$border-radius, $key); }
+@mixin border($w:1, $c: var(--border), $style: solid) { border: map.get(tokens.$border-width,$w) $style $c; }
+@mixin border-dir($dir, $w:1, $c: var(--border), $style: solid) { border-#{$dir}: map.get(tokens.$border-width,$w) $style $c; }
+@mixin shadow($key: sm) { box-shadow: map.get(tokens.$shadow, $key); }
+@mixin ring($size: 6rpx, $color: var(--primary-base)) { box-shadow: 0 0 0 $size $color; }

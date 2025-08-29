@@ -1,0 +1,40 @@
+export type MessageType = 'info' | 'success' | 'warning' | 'danger' | 'primary'
+
+export type MessageOptions = {
+	content : string
+	type ?: MessageType
+	duration ?: number
+	icon ?: string
+}
+
+export const MESSAGE_KEY = 'lb-message'
+
+export function useMessage() {
+	// const api = inject(MESSAGE_KEY, null)
+
+	// const ensure = () => {
+	// 	if (!api) {
+	// 		console.warn('[lb-message] 页面中未挂载 <lb-message/>')
+	// 		return null
+	// 	}
+	// 	return api
+	// }
+
+	const message = (content, opts = {}) =>
+		uni.$emit(MESSAGE_KEY + ':open', { content, ...opts })
+
+	const typed = (type) => (content, opts = {}) =>
+		uni.$emit(MESSAGE_KEY + ':open', { content, type, ...opts })
+
+	return {
+		message,                           // message('自定义', { type:'primary', duration: 1500, closable: true })
+		info: typed('info'),
+		success: typed('success'),
+		warning: typed('warning'),
+		danger: typed('danger'),
+		primary: typed('primary'),
+		clear: () => ensure()?.clear()
+	}
+}
+
+export default useMessage

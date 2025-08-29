@@ -1,0 +1,36 @@
+<template>
+	<view :class="classes">
+		<text v-if="title">{{title}}</text>
+		<slot></slot>
+	</view>
+</template>
+
+<script setup>
+	const props = defineProps({
+		title: {
+			type: String,
+			default: ''
+		},
+		customClass: {
+			type: String,
+			default: ''
+		}
+	})
+
+	const classes = computed(() => {
+		const cls = [
+			'lb-title',
+			props.customClass
+		];
+		return cls.filter(Boolean).join(' ')
+	})
+</script>
+
+<style lang="scss" scoped>
+	.lb-title {
+		width: 100%;
+		font-size: var(--font-size-sm);
+		color: var(--gray-500);
+		padding: var(--spacing-md);
+	}
+</style>

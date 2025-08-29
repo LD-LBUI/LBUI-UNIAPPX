@@ -1,0 +1,156 @@
+<template>
+	<button @tap="handelTap" :class="classes">
+		<lb-icon v-if="icon" :type="icon" />
+		<slot></slot>
+	</button>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		/** primary / success / warning / danger / info */
+		type: { type: String, default: 'primary' },
+		/** solid / outline / subtle / ghost */
+		variant: { type: String, default: 'solid' },
+		/** sm / md / lg */
+		size: { type: String, default: 'md' },
+		/** rounded / pill / none */
+		shape: { type: String, default: 'rounded' },
+		block: { type: Boolean, default: false },
+		disabled: { type: Boolean, default: false },
+		loading: { type: Boolean, default: false },
+		icon: { type: String, default: '' },
+		/** 额外类名（可选） */
+		customClass: { type: String, default: '' }
+	});
+
+	const emit = defineEmits(['tap']);
+
+	function handelTap(e : any) {
+		if (props.disabled || props.loading) return;
+		emit('tap', e);
+	}
+
+	const classes = computed(() => {
+		const cls = [
+			'lb-btn',
+			`lb-btn--${props.type}`,
+			props.variant !== 'solid' ? `is-${props.variant}` : '',
+			`size--${props.size}`,
+			`shape--${props.shape}`,
+			props.block ? 'is-block' : '',
+			(props.disabled || props.loading) ? 'is-disable' : '',
+			props.icon ? 'iconfont' : '',
+			props.customClass
+		]
+		return cls.filter(Boolean).join(' ')
+	})
+</script>
+
+<style lang="scss" scoped>
+	@use '~@/uni_modules/LD-LBUI/styles/_tokens.scss' as tokens;
+
+	// 主题列表
+	$variants: primary, success, warning, danger, info;
+
+	.lb-btn {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: var(--spacing-md);
+		background: var(--primary-base);
+		padding: 0 12rpx;
+		color: var(--primary-text);
+		font-size: var(--font-size-md);
+
+		transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+
+		@each $k,
+		$v in tokens.$font-sizes {
+			&.size--#{$k} {
+				font-size: $v;
+			}
+		}
+
+		&.is-block {
+			display: block;
+			width: 100%;
+		}
+
+		&.is-disabled {
+			opacity: .5;
+			pointer-events: none;
+		}
+
+		/* 形状 */
+		&.shape--none {
+			border-radius: map-get($map: tokens.$border-radius, $key: 'none');
+		}
+
+		&.shape--rounded {
+			border-radius: map-get($map: tokens.$border-radius, $key: 'md');
+		}
+
+		&.shape--pill {
+			border-radius: map-get($map: tokens.$border-radius, $key: 'full');
+		}
+
+	}
+
+	.lb-btn:active {
+		transform: translateY(1rpx);
+	}
+
+	.lb-btn--press {
+		transform: translateY(1rpx);
+	}
+
+	@each $v in $variants {
+		.lb-btn--#{$v}:not(.is-outline):not(.is-subtle):not(.is-ghost) {
+			background: var(--#{$v}-base);
+			color: var(--#{$v}-text);
+			border-color:var(--#{$v}-border);
+		}
+
+		.lb-btn--#{$v}:active:not(.is-outline):not(.is-subtle):not(.is-ghost) {
+			background: var(--#{$v}-active);
+		}
+
+		/* 描边 */
+		.lb-btn--#{$v}.is-outline {
+			background: transparent;
+			color: var(--#{$v}-base);
+			border-color: var(--#{$v}-base);
+			border-width: 1px;
+			border-style: solid;
+		}
+
+		.lb-btn--#{$v}.is-outline:active {
+			background: var(--#{$v}-subtle);
+		}
+
+
+		/* 浅色块 */
+		.lb-btn--#{$v}.is-subtle {
+			background: var(--#{$v}-subtle);
+			color: var(--#{$v}-base);
+			border-color: var(--#{$v}-subtle);
+		}
+
+		.lb-btn--#{$v}.is-subtle:active {
+			background: var(--#{$v}-hover);
+		}
+
+
+		/* 幽灵 */
+		.lb-btn--#{$v}.is-ghost {
+			background: transparent;
+			color: var(--#{$v}-base);
+			border-color: transparent;
+		}
+
+		.lb-btn--#{$v}.is-ghost:active {
+			background: var(--#{$v}-subtle);
+		}
+	}
+</style>
