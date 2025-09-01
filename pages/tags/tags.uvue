@@ -1,0 +1,55 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-title>普通示例</lb-title>
+		<lb-space>
+			<lb-tag>标签</lb-tag>
+			<lb-tag type="primary">标签</lb-tag>
+			<lb-tag type="warning">标签</lb-tag>
+			<lb-tag type="danger">标签</lb-tag>
+			<lb-tag type="success">标签</lb-tag>
+		</lb-space>
+
+		<lb-title>形状</lb-title>
+		<lb-space>
+			<lb-tag shape="rounded">标签</lb-tag>
+			<lb-tag shape="rounded" type="primary">标签</lb-tag>
+			<lb-tag shape="rounded" type="warning">标签</lb-tag>
+			<lb-tag shape="rounded" type="danger">标签</lb-tag>
+			<lb-tag shape="rounded" type="success">标签</lb-tag>
+		</lb-space>
+		<lb-space style="margin-top: 12rpx;">
+			<lb-tag shape="pill">标签</lb-tag>
+			<lb-tag shape="pill" type="primary">标签</lb-tag>
+			<lb-tag shape="pill" type="warning">标签</lb-tag>
+			<lb-tag shape="pill" type="danger">标签</lb-tag>
+			<lb-tag shape="pill" type="success">标签</lb-tag>
+		</lb-space>
+		<lb-space style="margin-top: 12rpx;">
+			<lb-tag shape="rounded" variant="outline" >标签</lb-tag>
+			<lb-tag shape="rounded" variant="outline"  type="primary">标签</lb-tag>
+			<lb-tag shape="rounded" variant="outline"  type="warning">标签</lb-tag>
+			<lb-tag shape="rounded" variant="outline"  type="danger">标签</lb-tag>
+			<lb-tag shape="rounded" variant="outline"  type="success">标签</lb-tag>
+		</lb-space>
+		<lb-space style="margin-top: 12rpx;">
+			<lb-tag shape="pill" variant="outline">标签</lb-tag>
+			<lb-tag shape="pill" variant="outline" type="primary">标签</lb-tag>
+			<lb-tag shape="pill" variant="outline" type="warning">标签</lb-tag>
+			<lb-tag shape="pill" variant="outline" type="danger">标签</lb-tag>
+			<lb-tag shape="pill" variant="outline" type="success">标签</lb-tag>
+		</lb-space>
+
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup>
+
+</script>
+
+<style>
+
+</style>

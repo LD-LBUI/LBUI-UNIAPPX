@@ -1,0 +1,38 @@
+<template>
+	<view class="lb-space" :class="[`is--${direction}`,`gap--${gap}`]">
+		<slot></slot>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		direction: { type: String, default: 'horizontal' },
+		gap: { type: String, default: 'md' }
+	})
+</script>
+
+<style lang="scss" scoped>
+	@use "~@/uni_modules/LD-LBUI/styles/_tokens.scss" as tokens;
+
+	.lb-space {
+		box-sizing: border-box;
+		display: flex;
+		width: 100%;
+
+		&.is--horizontal {
+			flex-direction: row;
+		}
+
+		&.is-vertical {
+			flex-direction: column;
+		}
+	}
+
+	@each $k,
+	$v in tokens.$spacing {
+		.gap--#{$k} {
+			gap: $v;
+		}
+	}
+	
+</style>

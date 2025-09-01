@@ -1,0 +1,44 @@
+<template>
+	<view :class="classes" :style="{width:props.size,height:props.size}">
+		<image style="width: 100%;height: 100%;" v-if="src" :src="src" :mode="mode"></image>
+		<slot v-else></slot>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		src: { type: String, default: '' },
+		size: { type: [String, Number], default: '80rpx' },
+		shape: { type: String, default: 'circle' },// circle | rounded
+		mode: { type: String, default: 'widthFix' }
+	})
+
+	const classes = computed(() => {
+		const cls = [
+			'lb-avatar',
+			`shape--${props.shape}`,
+		]
+		return cls.filter(Boolean).join(' ')
+	})
+</script>
+
+<style scoped lang="scss">
+	@use "~@/uni_modules/LD-LBUI/styles/_tokens.scss" as tokens;
+
+	.lb-avatar {
+		background: var(--primary-subtle);
+		overflow: hidden;
+
+		image {
+			object-fit: cover;
+		}
+
+		&.shape--circle {
+			border-radius: 99999rpx;
+		}
+
+		&.shape--rounded {
+			border-radius: map-get($map: tokens.$border-radius, $key: md);
+		}
+	}
+</style>

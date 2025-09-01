@@ -1,229 +1,133 @@
 <template>
-        <view class="lb-tabs" :class="[sizeClass,typeClass]" :style="rootStyle">
-                <scroll-view :scroll-into-view="scrollIntoViewId" scroll-with-animation :show-scrollbar="false"
-                        direction="horizontal">
-                        <view :id="navId" class="lb-tabs__nav-inner" ref="navRef">
-                                <view v-for="(pane,idx) in panes" :key="pane.id" :id="`lb-tab-${uid}-${idx}`"
-                                        class="lb-tabs__tab" :class="{'is-active':activeIndex===idx}" @tap="onTabTap(idx)">
-                                        {{pane.label}}
-                                </view>
-                                <view class="lb-tabs__bar" :style="barStyle"></view>
-                        </view>
-                </scroll-view>
-                <swiper v-if="swipeable" class="lb-tabs__content" :current="activeIndex" @change="onSwiperChange">
-                        <swiper-item v-for="(pane,idx) in panes" :key="pane.id">
-                                <view class="lb-tabs__pane">
-                                        <component :is="pane.vnode" v-if="!lazy || pane.loaded"></component>
-                                </view>
-                        </swiper-item>
-                </swiper>
-                <view v-else class="lb-tabs__content">
-                        <view v-for="(pane,idx) in panes" :key="pane.id" v-show="activeIndex===idx" class="lb-tabs__pane">
-                                <component :is="pane.vnode" v-if="!lazy || pane.loaded"></component>
-                        </view>
-                </view>
-        </view>
+	<view class="lb-tabs">
+		<scroll-view class="lb-tabs__headers" direction="horizontal" :show-scrollbar="false" scroll-with-animation
+			scroll-into-view>
+			<view class="tabs-list">
+				<view class="tabs-list__item" @tap="setActiveTab(pane.value)"
+					:class="{'is-active':modelValue==pane.value}" v-for="pane in panes" :key="pane.value">
+					<text>{{pane.label}}</text>
+					<view v-show="modelValue == pane.value" class="tabs-list__item-activeline"></view>
+				</view>
+			</view>
+		</scroll-view>
+
+		<slot></slot>
+	</view>
 </template>
-
 <script setup lang="uts">
-        const modelValue = defineModel<number>()
-        const props = defineProps<{
-                type ?: 'line' | 'card' | 'segment'
-                size ?: 'sm' | 'md' | 'lg'
-                theme ?: string
-                swipeable ?: boolean
-                lazy ?: boolean
-        }>({
-                type: 'line',
-                size: 'md',
-                theme: 'primary',
-                swipeable: true,
-                lazy: true
-        })
+	const modelValue = defineModel()
+	const props = defineProps({
 
-        const emit = defineEmits(['change'])
+	})
 
-        interface TabPane {
-                id : string
-                label : string
-                vnode : any
-                loaded : boolean
-        }
+	const panes = ref<tabInfo[]>([])
+	const emit = defineEmits(['change'])
 
-        const uid = Math.random().toString(36).slice(2)
-        const navId = `lb-tabs-nav-${uid}`
-        const navRef = ref()
-        const scrollIntoViewId = ref('')
-        const barStyle = ref<any>({})
+	type tabInfo = {
+		value : string,
+		label : string,
+		isActiveRef : Ref
+	}
 
-        const slots = useSlots()
-        const panes = ref<Array<TabPane>>([])
+	const tabs = {
+		addTab(tabInfo : tabInfo) {
+			panes.value.push(tabInfo);
 
-        const activeIndex = computed({
-                get : () : number => modelValue.value ?? 0,
-                set : (val : number) => {
-                        modelValue.value = val
-                }
-        })
+			if (panes.value.length == 1 && !modelValue.value) {
+				setActiveTab(tabInfo.value)
+			}
+		},
+		removeTab(tabValue) {
+			const index = panes.value.findIndex(tab => tab.value === tabValue);
+			if (index !== -1) {
+				panes.value.splice(index, 1);
+			}
+			// 如果移除的是当前激活的 tab，则尝试激活下一个或上一个
+			if (tabValue === modelValue.value) {
+				const nextTab = panes.value[index] || panes.value[index - 1];
+				if (nextTab) {
+					setActiveTab(nextTab.value);
+				} else {
+					// 如果没有 tab 了，清空激活状态
+					setActiveTab('');
+				}
+			}
+		}
+	}
 
-        function initPanes() {
-                const list = slots.default ? slots.default() : []
-                panes.value = list.map((vnode : any, idx : number) => {
-                        const props : any = vnode.props || {}
-                        return {
-                                id: props.id || String(idx),
-                                label: props.label || props.title || `Tab ${idx + 1}`,
-                                vnode,
-                                loaded: !props.lazy && !lazy ? true : idx === activeIndex.value
-                        } as TabPane
-                })
-        }
-        initPanes()
+	const setActiveTab = (val) => {
+		modelValue.value = val
+		const paneData = panes.value.find(p => p.value == val)
+		emit('change', { val, paneData })
+		updateActiveTab()
+	}
 
-        const rootStyle = computed(() => ({
-                '--active-color': `var(--${props.theme}-base)`
-        }))
+	const updateActiveTab = () => {
+		panes.value.forEach(pane => {
+			if (pane.updateActive) {
+				pane.updateActive(modelValue.value)
+			}
+		})
+	}
 
-        const sizeClass = computed(() => `size--${props.size}`)
-        const typeClass = computed(() => `type--${props.type}`)
+	provide('lb-tabs-root', tabs)
 
-        function onTabTap(idx : number) {
-                if (idx === activeIndex.value) return
-                activeIndex.value = idx
-                emit('change', idx)
-        }
-
-        function onSwiperChange(e : any) {
-                activeIndex.value = e.detail.current
-                emit('change', activeIndex.value)
-        }
-
-        function updateBar() {
-                nextTick(() => {
-                        const q = uni.createSelectorQuery()
-                        q.select(`#${navId}`).boundingClientRect((navRect : any) => {
-                                q.select(`#lb-tab-${uid}-${activeIndex.value}`).boundingClientRect((tabRect : any) => {
-                                        if (!navRect || !tabRect) return
-                                        const left = tabRect.left - navRect.left
-                                        barStyle.value = {
-                                                width: `${tabRect.width}px`,
-                                                transform: `translateX(${left}px)`
-                                        }
-                                }).exec()
-                        }).exec()
-                })
-        }
-
-        watch(activeIndex, (idx : number) => {
-                scrollIntoViewId.value = `lb-tab-${uid}-${idx}`
-                if (panes.value[idx]) panes.value[idx].loaded = true
-                updateBar()
-        })
-
-        onMounted(() => {
-                updateBar()
-        })
-
-        const swipeable = computed(() => props.swipeable)
-        const lazy = props.lazy
-
+	onMounted(() => {
+		nextTick(() => {
+			updateActiveTab(modelValue.value)
+		})
+	})
 </script>
-
 <style lang="scss" scoped>
-        .lb-tabs {
-                display: flex;
-                flex-direction: column;
-        }
+	.lb-tabs {
+		background: var(--bg);
+		width: 100%;
+		box-sizing: border-box;
+	}
 
-        .lb-tabs__nav-inner {
-                display: flex;
-                flex-direction: row;
-                position: relative;
-        }
+	.lb-tabs__headers {
+		width: 100%;
+		height: 45px;
+		background: var(--bg);
+		border-bottom: 1px solid var(--border);
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+	}
 
-        .lb-tabs__tab {
-                padding: var(--spacing-md) var(--spacing-lg);
-                color: var(--gray-500);
-                white-space: nowrap;
-        }
+	.tabs-list {
+		display: flex;
+		width: 100%;
+		flex-direction: row;
+	}
 
-        .lb-tabs__tab.is-active {
-                color: var(--active-color);
-        }
+	.tabs-list__item {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex: 1;
+		text-align: center;
+		padding: 0 15px;
+		height: 45px;
+		min-width: 60px;
 
-        .lb-tabs__bar {
-                position: absolute;
-                bottom: 0;
-                height: 4rpx;
-                background-color: var(--active-color);
-                transition: width .3s ease, transform .3s ease;
-        }
+		&.is-active {
+			color: var(--primary-base);
+			font-weight: var(--fw-bold);
+		}
+	}
 
-        .lb-tabs__content {
-                flex: 1;
-        }
-
-        .lb-tabs__pane {
-                width: 100%;
-                height: 100%;
-        }
-
-        .lb-tabs.size--sm .lb-tabs__tab {
-                padding: var(--spacing-sm) var(--spacing-md);
-                font-size: var(--font-size-sm);
-        }
-
-        .lb-tabs.size--md .lb-tabs__tab {
-                padding: var(--spacing-md) var(--spacing-lg);
-                font-size: var(--font-size-md);
-        }
-
-        .lb-tabs.size--lg .lb-tabs__tab {
-                padding: var(--spacing-lg) var(--spacing-xl);
-                font-size: var(--font-size-lg);
-        }
-
-        .lb-tabs.type--card .lb-tabs__nav-inner {
-                border-bottom: 1px solid var(--gray-200);
-        }
-
-        .lb-tabs.type--card .lb-tabs__tab {
-                border: 1px solid var(--gray-200);
-                border-bottom: none;
-                margin-right: -1px;
-                border-top-left-radius: var(--border-radius-md);
-                border-top-right-radius: var(--border-radius-md);
-        }
-
-        .lb-tabs.type--card .lb-tabs__tab.is-active {
-                background-color: #fff;
-                color: var(--active-color);
-                border-color: var(--active-color);
-        }
-
-        .lb-tabs.type--card .lb-tabs__bar {
-                display: none;
-        }
-
-        .lb-tabs.type--segment {
-                background-color: var(--gray-100);
-                padding: var(--spacing-xs);
-                border-radius: var(--border-radius-md);
-        }
-
-        .lb-tabs.type--segment .lb-tabs__tab {
-                padding: var(--spacing-sm) var(--spacing-md);
-                border-radius: var(--border-radius-md);
-                margin-right: var(--spacing-sm);
-        }
-
-        .lb-tabs.type--segment .lb-tabs__tab.is-active {
-                background-color: var(--active-color);
-                color: #fff;
-        }
-
-        .lb-tabs.type--segment .lb-tabs__bar {
-                display: none;
-        }
-
+	.tabs-list__item-activeline {
+		height: 3px;
+		background: var(--primary-base);
+		position: absolute;
+		bottom: 0;
+		left: 42%;
+		width: 16px;
+		border-radius: 4px;
+		z-index: 1;
+	}
 </style>

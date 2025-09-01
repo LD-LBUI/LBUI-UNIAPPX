@@ -1,0 +1,26 @@
+<template>
+	<view class="lb-picker__data-container">
+
+	</view>
+	<lb-popup v-model:visible="visible">
+		<view>
+			
+		</view>
+	</lb-popup>
+</template>
+
+<script setup lang="uts">
+	import type { PickerData } from './types';
+	const visible = defineModel()
+	const props = defineProps<{
+		options : PickerData[],
+	}>()
+
+	const emit = defineEmits(['change', 'confirm', 'cancel', 'close'])
+	
+	
+</script>
+
+<style lang="scss" scoped>
+
+</style>

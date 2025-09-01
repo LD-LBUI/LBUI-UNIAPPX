@@ -9,9 +9,12 @@
 	"quickapp": {},
 	/* 小程序特有相关 */
 	"mp-weixin": {
-		"appid": "",
+		"appid": "wx8f9db228741b2ef9",
 		"setting": {
-			"urlCheck": false
+			"urlCheck": false,
+			"postcss": true,
+			"es6": false,
+			"minified": true
 		},
 		"usingComponents": true
 	},
@@ -59,6 +62,11 @@
 			"modules": {},
 			"icons": {},
 			"splashScreens": {}
+		}
+	},
+	"web": {
+		"router": {
+			"mode": ""
 		}
 	}
 }

@@ -1,2 +1,7 @@
 /unpackage/
 /.hbuilderx/
+/docs/.vitepress/dist
+/docs/.vitepress/cache
+/node_modules/
+/pnpm-lock.yaml
+.DS_Store

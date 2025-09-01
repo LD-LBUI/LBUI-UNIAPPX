@@ -1,0 +1,57 @@
+<template>
+	<scroll-view style="max-height: 100vh;" :show-scrollbar="false" direction="vertical" @scrolltolower="handleLower"
+		class="lb-list-container" :class="{'show-border':border}">
+		<slot v-if="!loading" :border="border"></slot>
+		<view v-if="loading" class="lb-list__loading">
+			<lb-icon spin type="icon-loading" size="40rpx" color="#007aff" />
+			<text>加载中</text>
+		</view>
+		<view v-if="finished && !loading" class="lb-list__finishedtext">
+			<text>{{finishedText}}</text>
+		</view>
+	</scroll-view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		border: { type: Boolean, default: true },
+		loading: { type: Boolean, default: false },
+		finished: { type: Boolean, default: false },
+		finishedText: { type: String, default: '没有更多了' },
+	})
+	const emit = defineEmits(['load', 'refresh'])
+
+
+	const handleLower = () => {
+		if (props.finished || props.loading) return;
+		emit('load')
+	}
+</script>
+
+<style lang="scss" scoped>
+	.lb-list-container {
+		width: 100%;
+		box-sizing: border-box;
+
+		.lb-list__finishedtext {
+			width: 100%;
+			text-align: center;
+			color: var(--gray-400);
+			font-size: var(--font-size-xs);
+			background: transparent;
+			padding: var(--spacing-lg) 0;
+		}
+
+		.lb-list__loading {
+			width: 100%;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			color: var(--gray-400);
+			gap: var(--spacing-md);
+			padding: var(--spacing-lg) 0;
+		}
+	}
+</style>

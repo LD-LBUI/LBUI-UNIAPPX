@@ -25,6 +25,27 @@
 			{
 				"navigationBarTitleText" : "Popup"
 			}
+		},
+		{
+			"path" : "pages/tabs/tabs",
+			"style" : 
+			{
+				"navigationBarTitleText" : "Tabs 选项卡"
+			}
+		},
+		{
+			"path" : "pages/tags/tags",
+			"style" : 
+			{
+				"navigationBarTitleText" : "Tags"
+			}
+		},
+		{
+			"path" : "pages/list/list",
+			"style" : 
+			{
+				"navigationBarTitleText" : "List"
+			}
 		}
 	],
 	"globalStyle": {

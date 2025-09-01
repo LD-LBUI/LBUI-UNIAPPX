@@ -1,0 +1,102 @@
+<template>
+	<view :class="classes">
+		<slot></slot>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		type: { type: String, default: '' },// primary | succes | warning | danger
+		variant: { type: String, default: 'solid' },
+		size: { type: String, default: 'md' },
+		shape: { type: String, default: '' } // rounded | pill
+	})
+
+	const classes = computed(() => {
+		const cls = [
+			'lb-tag',
+			`lb-tag--${props.type}`,
+			props.variant !== 'solid' ? `is-${props.variant}` : '',
+			`size--${props.size}`,
+			`shape--${props.shape}`,
+		]
+		return cls.filter(Boolean).join(' ')
+	})
+</script>
+
+<style lang="scss" scoped>
+	@use "~@/uni_modules/LD-LBUI/styles/_tokens.scss" as tokens;
+
+	$variants: primary, success, warning, danger, info;
+
+	.lb-tag {
+		padding: var(--spacing-xs) var(--spacing-lg);
+		font-size: var(--font-size-sm);
+		background: var(--gray-200);
+		box-sizing: border-box;
+		width: max-content;
+		display: inline-block;
+
+		&.shape--none {
+			border-radius: map-get($map: tokens.$border-radius, $key: none);
+		}
+
+		&.shape--rounded {
+			border-radius: map-get($map: tokens.$border-radius, $key: sm);
+		}
+
+		&.shape--pill {
+			border-radius: map-get($map: tokens.$border-radius, $key: full);
+		}
+	}
+
+
+	@each $v in $variants {
+		.lb-tag--#{$v}:not(.is-outline):not(.is-subtle):not(.is-ghost) {
+			background: var(--#{$v}-base);
+			color: var(--#{$v}-text);
+			border-color:var(--#{$v}-border);
+		}
+
+		.lb-tag--#{$v}:active:not(.is-outline):not(.is-subtle):not(.is-ghost) {
+			background: var(--#{$v}-active);
+		}
+
+		/* 描边 */
+		.lb-tag--#{$v}.is-outline {
+			background: transparent;
+			color: var(--#{$v}-base);
+			border-color: var(--#{$v}-base);
+			border-width: 1px;
+			border-style: solid;
+		}
+
+		.lb-tag--#{$v}.is-outline:active {
+			background: var(--#{$v}-subtle);
+		}
+
+
+		/* 浅色块 */
+		.lb-tag--#{$v}.is-subtle {
+			background: var(--#{$v}-subtle);
+			color: var(--#{$v}-base);
+			border-color: var(--#{$v}-subtle);
+		}
+
+		.lb-tag--#{$v}.is-subtle:active {
+			background: var(--#{$v}-hover);
+		}
+
+
+		/* 幽灵 */
+		.lb-tag--#{$v}.is-ghost {
+			background: transparent;
+			color: var(--#{$v}-base);
+			border-color: transparent;
+		}
+
+		.lb-tag--#{$v}.is-ghost:active {
+			background: var(--#{$v}-subtle);
+		}
+	}
+</style>

@@ -1,0 +1,33 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-tabs v-model="value">
+			<lb-tab-pane value="1" lable="概览">
+				概览内容
+			</lb-tab-pane>
+
+			<lb-tab-pane value="2" lable="数据">
+				数据内容
+			</lb-tab-pane>
+
+			<lb-tab-pane value="3" lable="布局">
+				布局内容
+			</lb-tab-pane>
+
+			<lb-tab-pane value="4" lable="长度">
+				长度内容
+			</lb-tab-pane>
+		</lb-tabs>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup>
+	const value = ref('1')
+</script>
+
+<style>
+
+</style>

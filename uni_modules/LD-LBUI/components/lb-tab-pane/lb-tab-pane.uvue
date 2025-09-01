@@ -1,0 +1,37 @@
+<template>
+	<view v-if="isActive" class="lb-tab-pane">
+		<slot></slot>
+	</view>
+</template>
+
+<script setup>
+	const props = defineProps({
+		lable: { type: String, default: '' },
+		value: { type: String, default: '' },
+	})
+
+	const isActive = ref(false)
+	const tabsRoot = inject('lb-tabs-root')
+
+	function updateActive(val) {
+		isActive.value = (val == props.value)
+	}
+
+	onMounted(() => {
+		// 挂载时注册到父组件
+		if (tabsRoot && typeof tabsRoot.addTab === 'function') {
+			tabsRoot.addTab({
+				value: props.value,
+				label: props.lable,
+				updateActive
+			})
+		}
+	})
+</script>
+
+<style lang="scss" scoped>
+	.lb-tab-pane {
+		background: var(--bg);
+		padding: var(--spacing-md);
+	}
+</style>

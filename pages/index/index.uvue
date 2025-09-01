@@ -8,11 +8,11 @@
 		<lb-button type="success">这是一个按钮</lb-button>
 		<lb-button type="success" variant="outline">这是一个幽灵按钮</lb-button>
 
-		<lb-button type="warning">这是一个按钮</lb-button>
-		<lb-button type="warning" variant="outline">这是一个幽灵按钮</lb-button>
+		<lb-button type="warning" @tap="goToTag">Tags</lb-button>
+		<lb-button type="warning" @tap="goToList" variant="outline">List</lb-button>
 
 		<lb-button type="danger" @tap="goToPopup">PopUp</lb-button>
-		<lb-button type="danger" variant="outline">这是一个幽灵按钮</lb-button>
+		<lb-button type="danger" variant="outline" @tap="goToTabs">Tabs</lb-button>
 
 		<lb-button type="info" @tap="goToIcon">LB-ICON</lb-button>
 		<lb-button type="info" @tap="goToInput">LB-INPUT</lb-button>
@@ -46,6 +46,24 @@
 	function goToPopup() {
 		uni.navigateTo({
 			url: "/pages/popup/popup"
+		})
+	}
+
+	function goToTabs() {
+		uni.navigateTo({
+			url: "/pages/tabs/tabs"
+		})
+	}
+
+	function goToTag() {
+		uni.navigateTo({
+			url: "/pages/tags/tags"
+		})
+	}
+	
+	function goToList() {
+		uni.navigateTo({
+			url: "/pages/list/list"
 		})
 	}
 </script>

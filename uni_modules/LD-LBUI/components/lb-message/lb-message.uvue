@@ -2,7 +2,7 @@
 	<view class="lb-message" :class="[`pos--${placement}`]" :style="{zIndex:zIndex,padding:offset+'px'}">
 		<view v-if="msg" class="lb-message__item" :style="styleByType(msg.type)" :class="[`is--${msg.type}`]">
 			<lb-icon :style="{color:`var(--${msg.type}-base)`}" size="42rpx" type="icon-prompt-filling" />
-			<text>{{msg.content}}</text>
+			<text style="color: var(--text-sub);">{{msg.content}}</text>
 		</view>
 	</view>
 </template>
@@ -98,7 +98,7 @@
 		border-radius: map-get($map: tokens.$border-radius, $key: md);
 		align-items: center;
 		box-shadow: map-get($map: tokens.$shadow, $key: lg);
-
+		color: var(--text);
 
 		&.is-enter {
 			animation: slide-down--in var(--dur, 200ms) ease forwards;

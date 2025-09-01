@@ -1,0 +1,54 @@
+<template>
+	<view class="lb-badge-container">
+		<slot></slot>
+		<view class="lb-badge" :style="styleByProps">
+			{{count}}
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		offset: { type: Array<String | Number>, default: [2, 2] },
+		dot: { type: Boolean, default: false },
+		count: { type: String, default: '' },
+		maxCount: { type: Number, default: 99 },
+		size: { type: String, default: 'md' } // size: sm | md | lg 
+		shape: { type: String, default: 'circle' } // badge形状 circle ｜ square ｜ bubble | ribbon
+	})
+
+	const classes = computed(() => {
+		const cls = [
+			'lb-badge',
+			props.dot ? 'dot' : '',
+			`shape--${props.shape}`,
+			`size--${props.size}`,
+		]
+
+		return cls.filter(Boolean).join(' ')
+	})
+
+	const styleByProps = computed(() => {
+		let offset = [];
+		if (props.offset.length === 1) {
+			offset = [props.offset[0], props.offset[0]]
+		} else if (props.offset.length === 2) {
+			offset = [props.offset[0], props.offset[1]]
+		}
+		return {
+			top: typeof offset[0] === 'number' ? String(offset[0]) + 'px' : offset[0],
+			right: typeof offset[1] === 'number' ? String(offset[1]) + 'px' : offset[1],
+		}
+	})
+</script>
+
+<style lang="scss" scoped>
+	.lb-badge-container {
+		position: relative;
+		width: 100%;
+
+		.lb-badge {
+			position: absolute;
+		}
+	}
+</style>

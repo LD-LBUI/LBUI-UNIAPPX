@@ -1,5 +1,7 @@
 <template>
-	<text :class="['lb-icon iconfont',customClass]" :style="mergedStyle">{{ glyph}}</text>
+	<text :class="['lb-icon iconfont',customClass,{
+		'spin':spin
+	}]" :style="mergedStyle">{{ glyph}}</text>
 </template>
 
 <script setup lang="uts">
@@ -8,7 +10,8 @@
 		size ?: number | string,
 		color ?: string,
 		customStyle ?: string | number,
-		class ?: string
+		class ?: string,
+		spin ?: boolean
 	}
 
 	const props = withDefaults(defineProps<IconProps>(), {
@@ -221,6 +224,22 @@
 	const customClass = computed(() => (props.class || ''))
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	.lb-icon {
+		display: inline-block;
+	}
 
+	.spin {
+		animation: circle infinite 1.5s linear;
+	}
+
+	@keyframes circle {
+		from {
+			transform: rotate(0);
+		}
+
+		to {
+			transform: rotate(360deg);
+		}
+	}
 </style>

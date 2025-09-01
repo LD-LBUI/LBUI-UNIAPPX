@@ -47,8 +47,18 @@
 }
 
 // —— 新增：边框/圆角/阴影/Ring ——
-@mixin rounded($key: md) { border-radius: map.get(tokens.$border-radius, $key); }
-@mixin border($w:1, $c: var(--border), $style: solid) { border: map.get(tokens.$border-width,$w) $style $c; }
-@mixin border-dir($dir, $w:1, $c: var(--border), $style: solid) { border-#{$dir}: map.get(tokens.$border-width,$w) $style $c; }
-@mixin shadow($key: sm) { box-shadow: map.get(tokens.$shadow, $key); }
-@mixin ring($size: 6rpx, $color: var(--primary-base)) { box-shadow: 0 0 0 $size $color; }
+@mixin rounded($key: md) {
+  border-radius: map.get(tokens.$border-radius, $key);
+}
+@mixin border($w: 1, $c: var(--border), $style: solid) {
+  border: map.get(tokens.$border-width, $w) $style $c;
+}
+@mixin border-dir($dir, $w: 1, $c: var(--border), $style: solid) {
+  border-#{$dir}: map.get(tokens.$border-width, $w) $style $c;
+}
+@mixin shadow($key: sm) {
+  box-shadow: map.get(tokens.$shadow, $key);
+}
+@mixin ring($size: 6rpx, $color: var(--primary-base)) {
+  box-shadow: 0 0 0 $size $color;
+}

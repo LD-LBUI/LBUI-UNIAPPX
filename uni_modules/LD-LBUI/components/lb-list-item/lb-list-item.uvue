@@ -1,0 +1,97 @@
+<template>
+	<view class="lb-list-item" :class="{'is--hover':hover,'border':border}">
+		<view class="lb-lite-item__media">
+			<lb-icon v-if="$props.prefix" :type="prefix" color="#007aff" size="42rpx" />
+			<slot v-if="$slots && $slots?.prefix" name="prefix"></slot>
+		</view>
+		<view class="lb-list-item__content" :class="{'self-start':description}">
+			<view class="title">
+				<text v-if="$props.title">{{title}}</text>
+			</view>
+			<view class="description">
+				<text v-if="$props.description">{{description}}</text>
+			</view>
+		</view>
+		<view class="lb-list-item__action">
+			<view class="notice">
+				<text v-if="notice">{{notice}}</text>
+				<slot v-else-if="$slots && $slots?.notice" name="notice"></slot>
+			</view>
+			<view>
+				<lb-icon type="icon-arrow-right" size="40rpx" />
+			</view>
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const props = defineProps({
+		title: { type: String, default: '' },
+		description: { type: String, default: '' }, // 标题下方描述
+		prefix: { type: String, default: '' }, // 前ICON
+		notice: { type: String, default: '' },
+		showArrow: { type: Boolean, default: true },
+		hover: { type: Boolean, default: true },
+		suffix: { type: String, default: '' },// 后ICON
+		border: { type: Boolean, default: true }
+	})
+</script>
+
+<style lang="scss" scoped>
+	.lb-list-item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+
+		width: 100%;
+		min-height: 67px;
+		background: var(--bg);
+
+		gap: var(--spacing-sm);
+		padding: var(--spacing-md) var(--spacing-sm);
+
+		&.is--hover:active {
+			background: var(--bg-muted);
+		}
+	}
+
+	.lb-lite-item__media {}
+
+	.lb-list-item__content {
+		flex: 1;
+		align-self: center;
+
+		&.self-start {
+			align-self: flex-start;
+		}
+
+		.title {
+			font-weight: var(--fw-bold);
+		}
+
+		.description {
+			font-weight: var(--fw-regular);
+			color: var(--text-sub);
+			font-size: var(--font-size-sm);
+			margin-top: var(--spacing-md);
+		}
+	}
+
+	.lb-list-item__action {
+		display: flex;
+		justify-content: flex-end;
+		gap: var(--spacing-sm);
+		align-items: center;
+		flex-direction: row;
+
+		.notice {
+			color: var(--text-sub);
+		}
+	}
+
+	.lb-list-item.border+.lb-list-item.border {
+		border-top: 1px solid var(--border);
+	}
+</style>
