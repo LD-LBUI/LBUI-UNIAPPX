@@ -18,14 +18,13 @@
 		</view>
 
 		<view class="dialog__footer">
-			<slot name="footer">
-				<view class="dialog__footer_acitons">
-					<lb-button @tap="onCancel" style="padding: 18rpx 0;font-weight: var(--fw-semibold);flex: 1;" variant="ghost"
-						type="info" shape="none" block>{{cancelText}}</lb-button>
-					<lb-button @tap="onConfirm" style="padding: 18rpx 0;font-weight: var(--fw-semibold);flex: 1;"
-						variant="ghost" shape="none" block>{{confirmText}}</lb-button>
-				</view>
-			</slot>
+			<slot name="footer" v-if="$slots && $slots?.footer"></slot>
+			<view v-if="showAction" class="dialog__footer_acitons">
+				<lb-button @tap="onCancel" style="min-height: 50px;font-weight: var(--fw-semibold);flex: 1;"
+					variant="ghost" type="info" shape="none">{{cancelText}}</lb-button>
+				<lb-button @tap="onConfirm" style="min-height: 50px;font-weight: var(--fw-semibold);flex: 1;"
+					variant="ghost" shape="none">{{confirmText}}</lb-button>
+			</view>
 		</view>
 	</lb-popup>
 </template>
@@ -152,8 +151,10 @@
 
 		.dialog__footer_acitons {
 			display: flex;
-			width: 100%;
+			justify-content: space-around;
+			align-items: center;
 			flex-direction: row;
+			box-sizing: border-box;
 		}
 	}
 </style>

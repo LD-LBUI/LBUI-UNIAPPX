@@ -1,9 +1,9 @@
 <template>
 	<view class="lb-tabs">
 		<scroll-view class="lb-tabs__headers" direction="horizontal" :show-scrollbar="false" scroll-with-animation
-			scroll-into-view>
+			:scroll-into-view="moveTabId">
 			<view class="tabs-list">
-				<view class="tabs-list__item" @tap="setActiveTab(pane.value)"
+				<view class="tabs-list__item" @tap="setActiveTab(pane.value)" :id="'tab_item__'+String(pane.value)"
 					:class="{'is-active':modelValue==pane.value}" v-for="pane in panes" :key="pane.value">
 					<text>{{pane.label}}</text>
 					<view v-show="modelValue == pane.value" class="tabs-list__item-activeline"></view>
@@ -22,6 +22,7 @@
 
 	const panes = ref<tabInfo[]>([])
 	const emit = defineEmits(['change'])
+	const moveTabId = ref('')
 
 	type tabInfo = {
 		value : string,
@@ -60,6 +61,17 @@
 		const paneData = panes.value.find(p => p.value == val)
 		emit('change', { val, paneData })
 		updateActiveTab()
+		moveTabs(val)
+	}
+
+	const moveTabs = (val) => {
+		const prefix = 'tab_item__';
+		const thisItem = prefix + String(val);
+		const thisIndex = panes.value.findIndex(p => p.value == val);
+		const previousIndex = thisIndex - 1 < 0 ? 0 : thisIndex - 1;
+
+		const previousItem = prefix + String(panes.value[previousIndex].value)
+		moveTabId.value = previousItem
 	}
 
 	const updateActiveTab = () => {
@@ -98,8 +110,9 @@
 
 	.tabs-list {
 		display: flex;
-		width: 100%;
 		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
 	}
 
 	.tabs-list__item {
@@ -112,7 +125,8 @@
 		text-align: center;
 		padding: 0 15px;
 		height: 45px;
-		min-width: 60px;
+		min-width: 80px;
+		box-sizing: border-box;
 
 		&.is-active {
 			color: var(--primary-base);

@@ -1,13 +1,13 @@
 <template>
 	<view v-if="isActive" class="lb-tab-pane">
-		<slot></slot>
+		<slot />
 	</view>
 </template>
 
 <script setup>
 	const props = defineProps({
 		lable: { type: String, default: '' },
-		value: { type: String, default: '' },
+		value: { type: [String, Number], default: '' },
 	})
 
 	const isActive = ref(false)

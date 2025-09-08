@@ -1,16 +1,18 @@
 {
 	"id": "LD-LBUI",
-	"displayName": "LD-LBUI",
+	"displayName": "LBUI",
 	"version": "1.0.0",
-	"description": "LD-LBUI",
+	"description": "一个基于 UNIAPP-X 的组件库 主题可调, 使用 UTS, 尽量多端适配, 简化一切可能的操作",
 	"keywords": [
-        "LD-LBUI"
+        "LD-LBUI",
+        "LandBlueUI",
+        "前端组件"
     ],
-	"repository": "",
+	"repository": "https://github.com/LD-LBUI/LBUI-UNIAPPX",
 	"engines": {
 		"HBuilderX": "^3.1.0",
-		"uni-app": "^3.1.0",
-		"uni-app-x": "^3.1.0"
+		"uni-app": "^4.75",
+		"uni-app-x": "^4.75"
 	},
 	"dcloudext": {
 		"type": "component-vue",
@@ -23,26 +25,26 @@
 			}
 		},
 		"contact": {
-			"qq": ""
+			"qq": "1143524493"
 		},
 		"declaration": {
-			"ads": "",
-			"data": "",
-			"permissions": ""
+			"ads": "无",
+			"data": "插件不采集任何数据",
+			"permissions": "无"
 		},
 		"npmurl": "",
-		"darkmode": "-",
-		"i18n": "-",
-		"widescreen": "-"
+		"darkmode": "√",
+		"i18n": "x",
+		"widescreen": "x"
 	},
 	"uni_modules": {
 		"dependencies": [],
 		"encrypt": [],
 		"platforms": {
 			"cloud": {
-				"tcb": "-",
-				"aliyun": "-",
-				"alipay": "-"
+				"tcb": "√",
+				"aliyun": "√",
+				"alipay": "√"
 			},
 			"client": {
 				"uni-app": {
@@ -79,8 +81,8 @@
 				},
 				"uni-app-x": {
 					"web": {
-						"safari": "-",
-						"chrome": "-"
+						"safari": "√",
+						"chrome": "√"
 					},
 					"app": {
 						"android": "-",
@@ -88,7 +90,7 @@
 						"harmony": "-"
 					},
 					"mp": {
-						"weixin": "-"
+						"weixin": "√"
 					}
 				}
 			}

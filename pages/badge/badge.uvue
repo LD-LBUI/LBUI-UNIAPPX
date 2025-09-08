@@ -1,0 +1,39 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-space style="padding: 16px;">
+			<lb-badge dot>
+				<lb-button>按钮</lb-button>
+			</lb-badge>
+			
+			<lb-badge type="danger" value="8">
+				<lb-button>按钮</lb-button>
+			</lb-badge>
+			
+			<lb-badge type="danger" processing :offset-x="6" :offset-y="6" value="8">
+				<lb-button>按钮</lb-button>
+			</lb-badge>
+			
+			<lb-badge type="danger" variant="outline" :offset-x="6" :offset-y="6" value="8">
+				<lb-button>按钮</lb-button>
+			</lb-badge>
+		</lb-space>
+		
+		<lb-space style="padding: 16px;">
+			<lb-badge type="danger" processing :offset-x="6" :offset-y="6" text="NEW">
+				<lb-button>按钮</lb-button>
+			</lb-badge>
+		</lb-space>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup>
+
+</script>
+
+<style>
+
+</style>

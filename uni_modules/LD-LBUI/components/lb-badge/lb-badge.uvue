@@ -1,54 +1,260 @@
 <template>
-	<view class="lb-badge-container">
-		<slot></slot>
-		<view class="lb-badge" :style="styleByProps">
-			{{count}}
+	<view :class="wrapClass" :style="wrapStyle">
+		<view class="lb-badge__anchor" :class="{'is-shrink':shrink}">
+			<slot></slot>
+		</view>
+
+		<!-- 徽章内容 -->
+		<view v-if="visible" class="lb-badge" :class="badgeClass" :style="badgeStyle">
+			<view v-if="dot" class="lb-badge_dot"></view>
+			<text v-else class="lb-badge__text">
+				{{displayText}}
+			</text>
+			<view v-if="processing" class="lb-badge__pulse" />
 		</view>
 	</view>
 </template>
 
 <script setup lang="uts">
 	const props = defineProps({
-		offset: { type: Array<String | Number>, default: [2, 2] },
+		/* 主题与外观 */
+		type: { type: String, default: 'primary' },       // primary|success|warning|danger|info|neutral
+		variant: { type: String, default: 'solid' },      // solid|subtle|outline
+		size: { type: String, default: 'md' },            // sm|md|lg
+		shape: { type: String, default: 'pill' },         // pill|rounded
+
+		/* 内容 */
+		text: { type: String, default: '' },
+		value: { type: [Number, String], default: null },
+		max: { type: Number, default: 99 },
+		showZero: { type: Boolean, default: false },
 		dot: { type: Boolean, default: false },
-		count: { type: String, default: '' },
-		maxCount: { type: Number, default: 99 },
-		size: { type: String, default: 'md' } // size: sm | md | lg 
-		shape: { type: String, default: 'circle' } // badge形状 circle ｜ square ｜ bubble | ribbon
+		processing: { type: Boolean, default: false },
+
+		/* 角标定位（包裹子元素时生效） */
+		placement: { type: String, default: 'top-right' }, // top-right|top-left|bottom-right|bottom-left
+		offsetX: { type: Number, default: 0 },             // rpx
+		offsetY: { type: Number, default: 0 },
+
+		/* 强制行内模式；shrink 修正 slot 默认 100% 的问题 */
+		inline: { type: Boolean, default: false },
+		shrink: { type: Boolean, default: true },
+
+		customClass: { type: String, default: '' }
 	})
 
-	const classes = computed(() => {
-		const cls = [
-			'lb-badge',
-			props.dot ? 'dot' : '',
-			`shape--${props.shape}`,
-			`size--${props.size}`,
-		]
+	const slots = useSlots()
+	const hasChild = computed(() => !!slots.default && !props.inline)
+	const mode = computed(() => (hasChild.value ? 'corner' : 'inline'))
 
-		return cls.filter(Boolean).join(' ')
+	const rawNumber = computed(() => {
+		if (props.text) return null;
+		if (props.value == null || props.value == '') return null;
+		const n = Number(props.value)
+		return Number.isNaN(n) ? null : n
 	})
 
-	const styleByProps = computed(() => {
-		let offset = [];
-		if (props.offset.length === 1) {
-			offset = [props.offset[0], props.offset[0]]
-		} else if (props.offset.length === 2) {
-			offset = [props.offset[0], props.offset[1]]
+	const displayText = computed(() => {
+		if (props.text) return props.text
+		if (rawNumber.value === undefined) return ''
+		if (rawNumber.value === 0 && !props.showZero) return ''
+		return rawNumber.value > props.max ? `${props.max}+` : String(rawNumber.value)
+	})
+
+	const visible = computed(() => props.dot || !!displayText.value)
+
+	const wrapClass = computed(() => [
+		'lb-badge-wrap',
+		mode.value === 'corner' ? 'is-corner' : 'is-inline',
+		mode.value === 'corner' ? `pos--${props.placement}` : ''
+	])
+
+	const wrapStyle = computed(() => ({
+		position: 'relative',
+		display: 'inline-flex',
+		verticalAlign: 'middle'
+	}))
+
+	const badgeClass = computed(() => [
+		`variant--${props.variant}`,
+		`type--${props.type}`,
+		`size--${props.size}`,
+		`shape--${props.shape}`,
+		mode.value === 'corner' ? 'mode--corner' : 'mode--inline',
+		props.processing ? 'is-processing' : '',
+		props.value ? 'is-value' : props.text ? 'is-text' : 'is-dot',
+		props.customClass
+	].filter(Boolean))
+
+	const badgeStyle = computed(() => {
+		if (mode.value === 'corner') {
+			const tx = (props.placement.includes('left') ? -props.offsetX : props.offsetX)
+			const ty = (props.placement.includes('top') ? -props.offsetY : props.offsetY)
+			return { transform: `translate(${tx}rpx, ${ty}rpx)` }
 		}
-		return {
-			top: typeof offset[0] === 'number' ? String(offset[0]) + 'px' : offset[0],
-			right: typeof offset[1] === 'number' ? String(offset[1]) + 'px' : offset[1],
-		}
+		return {}
 	})
 </script>
 
 <style lang="scss" scoped>
-	.lb-badge-container {
+	.lb-badge-wrap.is-corner {
 		position: relative;
-		width: 100%;
+		display: inline-flex;
+		vertical-align: middle;
+		overflow: visible;
+	}
 
-		.lb-badge {
-			position: absolute;
+	.lb-badge-wrap.is-inline {
+		display: inline-flex;
+		width: max-content;
+	}
+
+	.mode--corner {
+		position: absolute;
+	}
+
+	/* 角标四角定位 */
+	.lb-badge-wrap.pos--top-right .lb-badge {
+		top: 0;
+		right: 0;
+		transform-origin: 100% 0;
+	}
+
+	.lb-badge-wrap.pos--top-left .lb-badge {
+		top: 0;
+		left: 0;
+		transform-origin: 0 0;
+	}
+
+	.lb-badge-wrap.pos--bottom-right .lb-badge {
+		bottom: 0;
+		right: 0;
+		transform-origin: 100% 100%;
+	}
+
+	.lb-badge-wrap.pos--bottom-left .lb-badge {
+		bottom: 0;
+		left: 0;
+		transform-origin: 0 100%;
+	}
+
+	.lb-badge__anchor {
+		display: inline-flex;
+		width: max-content;
+		max-width: 100%;
+		align-self: flex-start;
+	}
+
+	.lb-badge_dot {
+		width: 14rpx;
+		height: 14rpx;
+		background: var(--danger-base);
+		border-radius: 50%;
+	}
+
+	.size--lg .lb-badge_dot {
+		width: 16rpx;
+		height: 16rpx;
+	}
+
+	.size--sm .lb-badge_dot {
+		width: 12rpx;
+		height: 12rpx;
+	}
+
+	.lb-badge__text {
+		line-height: 1;
+		font-size: var(--font-size-xs);
+	}
+
+	.lb-badge.is-text {
+		min-width: 16px;
+		height: 16px;
+		padding: 0 var(--spacing-sm);
+	}
+	
+	.lb-badge.is-value {
+		min-width: 16px;
+		height: 16px;
+	}
+
+	.shape--pill {
+		border-radius: 99999rpx;
+	}
+
+	.shape--rounded {
+		border-radius: 12rpx
+	}
+
+	.lb-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: auto;
+		z-index: 100;
+	}
+
+	@each $t in primary,
+	success,
+	warning,
+	danger,
+	info {
+		.type--#{$t}.variant--solid {
+			background: var(--#{$t}-base);
+			color: var(--#{$t}-text);
+		}
+
+		.type--#{$t}.variant--subtle {
+			background: var(--#{$t}-base);
+			color: var(--#{$t}-base);
+		}
+
+		.type--#{$t}.variant--outline {
+			background: transparent;
+			color: var(--#{$t}-base);
+			border: 1px solid var(--#{$t}-border);
+		}
+	}
+
+	/* 中性色 */
+	.type--neutral.variant--solid {
+		background: var(--text);
+		color: var(--bg);
+	}
+
+	.type--neutral.variant--subtle {
+		background: var(--bg);
+		color: var(--text);
+	}
+
+	.type--neutral.variant--outline {
+		background: transparent;
+		color: var(--text);
+	}
+
+	/* ========== 处理态（呼吸光圈） ========== */
+	.is-processing {
+		position: absolute;
+	}
+
+	.is-processing .lb-badge__pulse {
+		position: absolute;
+		inset: -4rpx;
+		border-radius: inherit;
+		border: 2rpx solid currentColor;
+		opacity: .5;
+		animation: lbbadge-pulse 1.2s ease-out infinite;
+	}
+
+	@keyframes lbbadge-pulse {
+		from {
+			transform: scale(.8);
+			opacity: .6;
+		}
+
+		to {
+			transform: scale(1.2);
+			opacity: 0;
 		}
 	}
 </style>

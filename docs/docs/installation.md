@@ -1,9 +1,9 @@
-# 安装
+# 安装 <Badge type="warning" text="HBuilderX 3.9+" />
 
 ::: warning
 **HBuilder X 版本要求**
 
-因为 LBUI 默认使用 UTS ，所以需要 HBuilder X 3.5.0 以上版本。
+因为 LBUI 默认使用 UTS ，所以需要 HBuilder X 3.9.0+ 以上版本。
 :::
 
 ## Easycom

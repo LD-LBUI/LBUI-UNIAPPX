@@ -3,20 +3,8 @@
 	<scroll-view style="flex:1">
 	<!-- #endif -->
 		<lb-tabs v-model="value">
-			<lb-tab-pane value="1" lable="概览">
-				概览内容
-			</lb-tab-pane>
-
-			<lb-tab-pane value="2" lable="数据">
-				数据内容
-			</lb-tab-pane>
-
-			<lb-tab-pane value="3" lable="布局">
-				布局内容
-			</lb-tab-pane>
-
-			<lb-tab-pane value="4" lable="长度">
-				长度内容
+			<lb-tab-pane v-for="item in tabs" :value="item.value" :lable="item.label" :key="item.value">
+				{{item.label}}内容
 			</lb-tab-pane>
 		</lb-tabs>
 	<!-- #ifdef APP -->
@@ -26,6 +14,17 @@
 
 <script setup>
 	const value = ref('1')
+
+	const tabs = computed(() => {
+		const tabs = [];
+		for (let i = 0; i < 15; i++) {
+			tabs.push({
+				label: '标签页' + String(i),
+				value: i
+			})
+		}
+		return tabs
+	})
 </script>
 
 <style>

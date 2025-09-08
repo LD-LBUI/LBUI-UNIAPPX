@@ -7,6 +7,8 @@ export default defineConfig({
   lang: "zh-CN",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: "/logo.png",
+    
     nav: [
       { text: "首页", link: "/" },
       { text: "文档", link: "/docs/introduction" },
@@ -37,8 +39,38 @@ export default defineConfig({
       ],
     },
 
+    footer: {
+      message: "Apache2.0 Licensed",
+      copyright: "Copyright © 2022-present LandonBlue",
+    },
+
     socialLinks: [
       { icon: "github", link: "https://github.com/LD-LBUI/LBUI-UNIAPPX" },
     ],
+
+    // 中文配置
+    docFooter: {
+      prev: "上一页",
+      next: "下一页",
+    },
+    outline: {
+      label: "页面导航",
+    },
+    lastUpdated: {
+      text: "最后更新时间",
+      formatOptions: {
+        dateStyle: "short",
+        timeStyle: "short",
+        hour12: false,
+        timeZone: "Asia/Shanghai",
+      },
+    },
+
+    langMenuLabel: "多语言",
+    returnToTopLabel: "返回顶部",
+    sidebarMenuLabel: "菜单",
+    darkModeSwitchLabel: "主题",
+    lightModeSwitchTitle: "切换为亮色主题",
+    darkModeSwitchTitle: "切换为暗色主题",
   },
 });

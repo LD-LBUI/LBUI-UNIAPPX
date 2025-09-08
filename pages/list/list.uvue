@@ -20,6 +20,26 @@
 			<lb-list-item title="列表项标题" notice="辅助信息" hover show-arrow />
 			<lb-list-item title="列表项标题" description="这是对于上方标题的补充描述" hover show-arrow />
 		</lb-list>
+		
+		<lb-title title="卡片列表"></lb-title>
+		<lb-list variant="card">
+			<lb-list-item title="列表项标题" hover show-arrow />
+			<lb-list-item title="列表项标题" prefix="icon-good" hover show-arrow />
+			<lb-list-item title="带头像的" hover show-arrow>
+				<template #prefix>
+					<lb-avatar src="https://tdesign.gtimg.com/mobile/demos/avatar1.png"></lb-avatar>
+				</template>
+			</lb-list-item>
+		
+			<lb-list-item title="带头像的" hover show-arrow>
+				<template #prefix>
+					<lb-avatar shape="rounded" src="https://tdesign.gtimg.com/mobile/demos/avatar1.png"></lb-avatar>
+				</template>
+			</lb-list-item>
+		
+			<lb-list-item title="列表项标题" notice="辅助信息" hover show-arrow />
+			<lb-list-item title="列表项标题" description="这是对于上方标题的补充描述" hover show-arrow />
+		</lb-list>
 	<!-- #ifdef APP -->
 	</scroll-view>
 	<!-- #endif -->

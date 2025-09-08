@@ -1,0 +1,21 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-title title="示例"></lb-title>
+		<lb-space direction="vertical" style="padding: 0 var(--spacing-md);">
+			<lb-rate />
+			<lb-rate show-text />
+		</lb-space>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup lang="uts">
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>

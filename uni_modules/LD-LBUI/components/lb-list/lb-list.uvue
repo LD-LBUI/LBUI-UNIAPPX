@@ -1,7 +1,7 @@
 <template>
 	<scroll-view style="max-height: 100vh;" :show-scrollbar="false" direction="vertical" @scrolltolower="handleLower"
-		class="lb-list-container" :class="{'show-border':border}">
-		<slot v-if="!loading" :border="border"></slot>
+		class="lb-list-container" :class="{'show-border':border,'is-card':variant==='card'}">
+		<slot v-if="!loading" :border="border" :variant="variant"></slot>
 		<view v-if="loading" class="lb-list__loading">
 			<lb-icon spin type="icon-loading" size="40rpx" color="#007aff" />
 			<text>加载中</text>
@@ -18,6 +18,7 @@
 		loading: { type: Boolean, default: false },
 		finished: { type: Boolean, default: false },
 		finishedText: { type: String, default: '没有更多了' },
+		variant: { type: String, default: '' }
 	})
 	const emit = defineEmits(['load', 'refresh'])
 
@@ -53,5 +54,17 @@
 			gap: var(--spacing-md);
 			padding: var(--spacing-lg) 0;
 		}
+
+		&.is-card {
+			margin: var(--spacing-md);
+			border-radius: 12rpx;
+			overflow: hidden;
+			width: auto;
+		}
+	}
+	
+	:deep(.lb-list-item:last-child) {
+		border-bottom-left-radius: 12rpx;
+		border-bottom-right-radius: 12rpx;
 	}
 </style>

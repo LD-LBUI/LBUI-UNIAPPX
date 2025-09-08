@@ -1,0 +1,62 @@
+<template>
+	<view class="lb-rate__container">
+		<view @tap="handleTap(index)" class="lb-rate__item" :class="{'lb-rate__item-active':index<=value}"
+			v-for="index in count" :key="index">
+			<lb-icon :type="icon" :size="size"></lb-icon>
+		</view>
+		<view v-if="showText" class="lb-rate__text">
+			{{rateText}}
+		</view>
+	</view>
+</template>
+
+<script setup lang="uts">
+	const value = defineModel()
+	const props = defineProps({
+		icon: { type: String, default: 'icon-favorite-filling' },
+		count: { type: Number, default: 5 },
+		size: { type: String, default: '50rpx' },
+		showText: { type: Boolean, default: false },
+		texts: { type: Array<String>, default: ['1分', '2分', '3分', '4分', '5分'] }
+	})
+
+	const emit = defineEmits(['change'])
+
+	const rateText = computed(() => {
+		if (value.value == 0) {
+			return '未评分'
+		} else if (props.texts.length > 0) {
+			return props?.texts[value.value - 1] ? props?.texts[value.value - 1] : ''
+		} else {
+			return ''
+		}
+	})
+
+	const handleTap = (ids) => {
+		value.value = ids;
+		emit('change', ids)
+	}
+</script>
+
+<style lang="scss" scoped>
+	.lb-rate__container {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.lb-rate__item:active {
+		transform: scale(1.1, 1.1);
+	}
+
+	.lb-rate__item-active {
+		color: var(--warning-base);
+	}
+
+	.lb-rate__text {
+		font-weight: var(--fw-semibold);
+		font-size: var(--font-size-lg);
+		margin-left: var(--spacing-md);
+	}
+</style>

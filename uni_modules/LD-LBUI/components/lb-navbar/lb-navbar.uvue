@@ -1,11 +1,15 @@
 <template>
 	<view class="lb-navbar" :style="{'background-color':bgColor,'color':color}">
-		<view @tap="handelTap" class="lb-navbar--left-arrow">
-			<lb-icon v-if="leftArrow" type="icon-arrow-left-bold" size="42rpx" />
+		<!-- 顶部状态栏占位 -->
+		<view class="is-nav" :style="{marginTop:statusBarHeight+'px','background-color':bgColor}" v-if="isNav"></view>
+		<view class="lb-navbar__container" :style="{'background-color':bgColor,'color':color}">
+			<view v-if="leftArrow" @tap="handelTap" class="lb-navbar--left-arrow">
+				<lb-icon type="icon-arrow-left-bold" size="42rpx" />
+			</view>
+			<slot>
+				<text :style="{'text-align':align}" style="width: 100%;box-sizing: border-box;">{{title}}</text>
+			</slot>
 		</view>
-		<slot>
-			<text :style="{'text-align':align}" style="width: 100%;box-sizing: border-box;">{{title}}</text>
-		</slot>
 	</view>
 </template>
 
@@ -30,6 +34,10 @@
 		bgColor: {
 			type: String,
 			default: ''
+		},
+		isNav: {
+			type: Boolean,
+			default: false
 		}
 	})
 
@@ -38,26 +46,40 @@
 	function handelTap() {
 		emit('goBack')
 	}
+
+	const statusBarHeight = computed(() => {
+		const { statusBarHeight } = uni.getWindowInfo()
+		return statusBarHeight
+	})
 </script>
 
 <style lang="scss" scoped>
 	.lb-navbar {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: start;
-		padding: var(--spacing-md);
-		background: var(--bg);
-		font-size: var(--font-size-lg);
-		font-weight: 600;
+		display: block;
 		width: 100%;
-		gap: 12rpx;
-		position: relative;
 
-		.lb-navbar--left-arrow {
-			position: absolute;
-			left: 12rpx;
-			z-index: 200508;
+		.lb-navbar__container {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: start;
+			padding: var(--spacing-md);
+			background: var(--bg);
+			font-size: var(--font-size-lg);
+			font-weight: 600;
+			width: 100%;
+			gap: 12rpx;
+			position: relative;
+
+			.lb-navbar--left-arrow {
+				position: absolute;
+				left: 12rpx;
+				z-index: 200508;
+			}
+		}
+
+		&.is-nav {
+			width: 100%;
 		}
 	}
 </style>

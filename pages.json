@@ -3,48 +3,63 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "LBUI"
+				"navigationBarTitleText": "LBUI",
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/icon/icon",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "图标 - ICON"
 			}
 		},
 		{
 			"path" : "pages/input/input",
 			"style" : 
 			{
-				"navigationBarTitleText" : "LB-INPUT"
+				"navigationBarTitleText" : "输入框 - INPUT"
 			}
 		},
 		{
 			"path" : "pages/popup/popup",
 			"style" : 
 			{
-				"navigationBarTitleText" : "Popup"
+				"navigationBarTitleText" : "弹窗 - Popup"
 			}
 		},
 		{
 			"path" : "pages/tabs/tabs",
 			"style" : 
 			{
-				"navigationBarTitleText" : "Tabs 选项卡"
+				"navigationBarTitleText" : "选项卡 - Tabs"
 			}
 		},
 		{
 			"path" : "pages/tags/tags",
 			"style" : 
 			{
-				"navigationBarTitleText" : "Tags"
+				"navigationBarTitleText" : "标签 - Tags"
 			}
 		},
 		{
 			"path" : "pages/list/list",
 			"style" : 
 			{
-				"navigationBarTitleText" : "List"
+				"navigationBarTitleText" : "列表 - List"
+			}
+		},
+		{
+			"path" : "pages/badge/badge",
+			"style" : 
+			{
+				"navigationBarTitleText" : "徽章 - Badge"
+			}
+		},
+		{
+			"path" : "pages/rate/rate",
+			"style" : 
+			{
+				"navigationBarTitleText" : "评分 - Rate"
 			}
 		}
 	],

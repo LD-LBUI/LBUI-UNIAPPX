@@ -8,8 +8,8 @@
 			{{label}}
 		</view>
 		<view class="input-item">
-			<input v-model="model" :password="password" :disabled="disabled" :style="{'text-align':align}" style="width: 100%;"
-				:type="type" :placeholder="placeholder" />
+			<input v-model="model" :password="password" :disabled="disabled" :style="{'text-align':align}"
+				style="width: 100%;" :type="type" :placeholder="placeholder" />
 			<slot>
 				<text class="help-message">{{helpMessage}}</text>
 			</slot>
@@ -59,7 +59,7 @@
 			default: ''
 		}
 	})
-	
+
 	const model = defineModel()
 </script>
 
@@ -78,6 +78,9 @@
 
 
 		.label {
+			display: flex;
+			flex-direction: row;
+
 			.mark {
 				color: var(--danger-base);
 			}
