@@ -1,13 +1,33 @@
 <template>
-	<view>
-		
+	<view class="lb-card__container">
+		<view class="lb-card__header">
+			<view class="main_title_container">
+				<lb-avatar></lb-avatar>
+				<text>{{title}}</text>
+			</view>
+		</view>
+		<view class="lb-card__body"></view>
 	</view>
 </template>
 
 <script setup lang="uts">
+	const props = defineProps({
+		title:{type:String,default:''},
 		
+	})
 </script>
 
 <style lang="scss" scoped>
+	.lb-card__container{
+		flex-direction: column;
+		border-radius: 12rpx;
 		
+		.lb-card__header{
+			background: var(--bg);
+			padding: var(--spacing-md);
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-around;
+		}
+	}
 </style>

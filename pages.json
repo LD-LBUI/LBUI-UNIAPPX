@@ -61,6 +61,13 @@
 			{
 				"navigationBarTitleText" : "评分 - Rate"
 			}
+		},
+		{
+			"path" : "pages/avatar/avatar",
+			"style" : 
+			{
+				"navigationBarTitleText" : "头像 - Avatar"
+			}
 		}
 	],
 	"globalStyle": {

@@ -8,7 +8,7 @@
 <script setup lang="uts">
 	const props = defineProps({
 		src: { type: String, default: '' },
-		size: { type: [String, Number], default: '80rpx' },
+		size: { type: [String, Number], default: '100rpx' },
 		shape: { type: String, default: 'circle' },// circle | rounded
 		mode: { type: String, default: 'widthFix' }
 	})

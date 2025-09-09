@@ -1,0 +1,25 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<lb-title title="图片头像"></lb-title>
+		<lb-space>
+			<lb-avatar v-for="ids in datas" :key="ids" :src="ids"></lb-avatar>
+		</lb-space>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script setup lang="uts">
+	const datas = [
+		'https://tdesign.gtimg.com/mobile/demos/avatar1.png',
+		'https://tdesign.gtimg.com/mobile/demos/avatar2.png',
+		'https://tdesign.gtimg.com/mobile/demos/avatar3.png',
+		'https://tdesign.gtimg.com/mobile/demos/avatar4.png'
+	]
+</script>
+
+<style lang="scss" scoped>
+
+</style>

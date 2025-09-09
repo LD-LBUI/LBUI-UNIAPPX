@@ -11,7 +11,7 @@
 			<input v-model="model" :password="password" :disabled="disabled" :style="{'text-align':align}"
 				style="width: 100%;" :type="type" :placeholder="placeholder" />
 			<slot>
-				<text class="help-message">{{helpMessage}}</text>
+				<text v-if="helpMessage" class="help-message">{{helpMessage}}</text>
 			</slot>
 		</view>
 		<view>
@@ -94,6 +94,10 @@
 				color: var(--gray-400);
 				font-weight: 400;
 				margin-top: var(--spacing-xs);
+			}
+
+			input {
+				flex-direction: row;
 			}
 		}
 	}

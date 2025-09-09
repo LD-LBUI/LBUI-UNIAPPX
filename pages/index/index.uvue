@@ -11,6 +11,7 @@
 		<lb-list-item title="徽章" url="/pages/badge/badge" />
 		<lb-list-item title="标签页" url="/pages/tabs/tabs" />
 		<lb-list-item title="评分" url="/pages/rate/rate" />
+		<lb-list-item title="头像" url="/pages/avatar/avatar" />
 	</lb-list>
 </template>
 <script setup lang="uts">
